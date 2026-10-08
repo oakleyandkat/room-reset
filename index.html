@@ -82,14 +82,25 @@ li input:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 li .lbl{font-weight:700;font-size:1.02rem}
 li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2px;color:var(--soft-ink)}
 
-/* photo for selected day */
+/* photos for selected day — one polaroid each, swiped sideways */
 .photo-box{display:flex;flex-direction:column;gap:12px}
+.strip{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:14px 6px 8px;margin-inline:-6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip .big-polaroid{flex:none;scroll-snap-align:center;width:min(100%,360px)}
+.strip.multi{justify-content:flex-start}
+.strip.multi .big-polaroid{width:min(76%,300px)}
+.strip .big-polaroid:nth-child(3n+2){transform:rotate(1.4deg)}
+.strip .big-polaroid:nth-child(3n){transform:rotate(-.6deg)}
 .big-polaroid{border:var(--line);border-radius:12px;background:var(--paper);padding:10px 10px 4px;transform:rotate(-1.2deg);position:relative;align-self:center;width:min(100%,360px)}
 .big-polaroid .ph{aspect-ratio:1;max-width:100%;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--lilac);display:grid;place-items:center;text-align:center;padding:0}
 .big-polaroid .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .big-polaroid .ph .ph-empty{font-family:var(--hand);font-size:1.3rem;padding:20px}
 .big-polaroid .cap{font-family:var(--hand);font-size:1.4rem;text-align:center;padding:6px 0 2px}
 .tape{position:absolute;top:-12px;left:50%;width:84px;height:24px;transform:translateX(-50%) rotate(-4deg);border:2px solid var(--ink);background:var(--butter);opacity:.95;border-radius:3px}
+.pol-x{position:absolute;top:-13px;right:-11px;width:34px;height:34px;border:var(--line);border-radius:99px;background:var(--pink);color:var(--ink);font:800 1.25rem/1 var(--body);cursor:pointer;display:grid;place-items:center;padding:0;z-index:2}
+.pol-x:active{transform:translateY(2px)}
+.pol-x:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+.strip-hint{font-family:var(--hand);font-size:1.05rem;color:var(--soft-ink);text-align:center;margin:-4px 0 0}
 .btn{font:800 1.02rem var(--body);border:var(--line);border-radius:16px;padding:13px 16px;cursor:pointer;background:var(--pink);color:var(--ink);width:100%;box-shadow:0 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
 .btn.alt{background:var(--mint)}
@@ -124,6 +135,9 @@ li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2
 .pol.future .ph{border-style:dashed;background:transparent !important}
 .pol.future:hover{transform:none}
 .pol .star{position:absolute;top:-10px;right:-8px;width:24px;height:24px}
+.pol.stack{isolation:isolate}
+.pol.stack::before{content:"";position:absolute;inset:0;border:2px solid var(--ink);border-radius:8px;background:var(--paper);transform:rotate(5deg) translate(3px,2px);z-index:-1}
+.pol .count{position:absolute;top:-9px;left:-7px;border:2px solid var(--ink);border-radius:99px;background:var(--butter);font:800 .62rem var(--body);padding:1px 6px;font-variant-numeric:tabular-nums}
 
 /* edit + backup drawers */
 details{border:var(--line);border-radius:18px;background:var(--paper);padding:4px 14px}
@@ -174,14 +188,10 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 
   <section class="photo-box">
     <h2 id="photoTitle"></h2>
-    <div class="big-polaroid">
-      <div class="tape"></div>
-      <div class="ph" id="photoWrap"></div>
-      <div class="cap" id="photoCap"></div>
-    </div>
-    <input type="file" id="photoInput" accept="image/*" capture="environment" aria-label="Room photo" hidden>
+    <div class="strip" id="strip"></div>
+    <p class="strip-hint" id="stripHint" hidden></p>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" multiple aria-label="Room photo" hidden>
     <button class="btn" id="photoBtn" type="button">Take a photo</button>
-    <button class="linkish" id="removePhoto" type="button" hidden>Remove this photo</button>
     <p class="msg" id="msg"></p>
   </section>
 
@@ -344,12 +354,19 @@ function lazyImage(id, alt){
 
 /* ---------- app state ---------- */
 let tasks = DEFAULT_TASKS.slice();
-let days = {};                                  // "2026-10-09" -> {done:{}, photo:id|null}
+let days = {};                                  // "2026-10-09" -> {done:{}, photos:[id,…]}
 let viewKey = clamp(keyOf(new Date()));
 let editDraft = null;
 
 const today = () => clamp(keyOf(new Date()));
-const dayData = k => days[k] || {done:{},photo:null};
+const dayData = k => days[k] || {done:{},photos:[]};
+
+/* Days used to hold a single `photo`. Anything saved back then still reads
+   fine — we just fold that one id into the new list. */
+const normalizeDay = v => ({
+  done: v.done || {},
+  photos: Array.isArray(v.photos) ? v.photos.filter(Boolean) : (v.photo ? [v.photo] : []),
+});
 const isFull = d => tasks.length>0 && tasks.every(t=>d.done && d.done[t.id]);
 
 function allKeys(){
@@ -365,7 +382,7 @@ function loadAll(){
   days = {};
   KEYS.forEach(k=>{
     const v = lsRead(lsKeyFor(k), null);
-    if(v) days[k] = {done: v.done || {}, photo: v.photo || null};
+    if(v) days[k] = normalizeDay(v);
   });
 }
 
@@ -377,7 +394,7 @@ function flashSaved(text){
 }
 function saveDay(k){
   const d = dayData(k);
-  const ok = lsWrite(lsKeyFor(k), {done:d.done, photo:d.photo||null});
+  const ok = lsWrite(lsKeyFor(k), {done:d.done, photos:d.photos||[]});
   flashSaved(ok ? "saved ♡" : "couldn't save — storage is full");
 }
 function saveSettings(){
@@ -414,22 +431,51 @@ function render(){
     ul.appendChild(li);
   });
 
+  renderPhotos();
+  updateStatus();
+}
+
+/* One polaroid per photo, lined up in a strip you can swipe sideways.
+   With nothing saved yet it's a single empty polaroid asking for a photo. */
+function renderPhotos(){
+  const list = dayData(viewKey).photos || [], n = list.length, isToday = viewKey===today();
+
   $("photoTitle").innerHTML = cameraIcon() + `<span></span>`;
-  $("photoTitle").querySelector("span").textContent = isToday ? "Today's photo" : "Photo for " + short(viewKey);
-  const pw=$("photoWrap"); pw.textContent="";
-  if(d.photo){
-    const img = lazyImage(d.photo, "Room photo for " + short(viewKey));
+  $("photoTitle").querySelector("span").textContent =
+    isToday ? (n>1 ? "Today's photos" : "Today's photo")
+            : (n>1 ? "Photos for " + short(viewKey) : "Photo for " + short(viewKey));
+
+  const strip = $("strip");
+  strip.textContent = "";
+  strip.classList.toggle("multi", n>1);
+  if(!n) strip.appendChild(polaroidEl(null,0,0));
+  else list.forEach((id,i)=>strip.appendChild(polaroidEl(id,i,n)));
+
+  $("stripHint").hidden = n<2;
+  $("stripHint").textContent = `${n} photos today · swipe →`;
+  $("photoBtn").textContent = n ? "Add another photo" : "Take a photo";
+}
+
+function polaroidEl(id,i,n){
+  const el = document.createElement("div");
+  el.className = "big-polaroid";
+  el.innerHTML = `<div class="tape"></div><div class="ph"></div><div class="cap"></div>`;
+  const ph = el.querySelector(".ph");
+  if(id){
+    const img = lazyImage(id, `Room photo ${i+1} of ${n} for ${short(viewKey)}`);
     img.loading = "eager";
     fillImage(img);
-    pw.appendChild(img);
+    ph.appendChild(img);
+    const x = document.createElement("button");
+    x.type = "button"; x.className = "pol-x"; x.textContent = "\u00d7";
+    x.setAttribute("aria-label", `Remove photo ${i+1} of ${n}`);
+    x.addEventListener("click", ()=>removePhoto(id));
+    el.appendChild(x);
   } else {
-    pw.innerHTML = `<div class="ph-empty">${flowerIcon("#ffd3dc").replace("<svg",'<svg style="width:54px;height:54px;display:block;margin:0 auto 6px"')}Snap your clean room!</div>`;
+    ph.innerHTML = `<div class="ph-empty">${flowerIcon("#ffd3dc").replace("<svg",'<svg style="width:54px;height:54px;display:block;margin:0 auto 6px"')}Snap your clean room!</div>`;
   }
-  $("photoCap").textContent = `${wk(viewKey)} · ${short(viewKey)}`;
-  $("photoBtn").textContent = d.photo ? "Retake photo" : "Take a photo";
-  $("removePhoto").hidden = !d.photo;
-
-  updateStatus();
+  el.querySelector(".cap").textContent = `${wk(viewKey)} · ${short(viewKey)}` + (n>1 ? ` · ${i+1} of ${n}` : "");
+  return el;
 }
 
 function renderWall(){
@@ -454,11 +500,13 @@ function renderWall(){
       b.className="pol"+(future?" future":"")+(k===t?" today":"")+(k===viewKey&&k!==t?" sel":"")+(isFull(d)?" full":"");
       if(future) b.disabled=true;
       const color=PASTELS[(i+mi)%6];
-      b.innerHTML=`<div class="ph" style="background:${color}">${d.photo?"":flowerIcon("#fffdfb")}</div><div class="d"></div><div class="n"></div>${isFull(d)?'<span class="star">'+starIcon()+'</span>':''}`;
-      if(d.photo) b.querySelector(".ph").appendChild(lazyImage(d.photo,""));
+      const shots = d.photos || [];
+      if(shots.length>1) b.classList.add("stack");
+      b.innerHTML=`<div class="ph" style="background:${color}">${shots.length?"":flowerIcon("#fffdfb")}</div><div class="d"></div><div class="n"></div>${isFull(d)?'<span class="star">'+starIcon()+'</span>':''}${shots.length>1?`<span class="count">${shots.length}</span>`:""}`;
+      if(shots.length) b.querySelector(".ph").appendChild(lazyImage(shots[0],""));
       b.querySelector(".d").textContent = short(k);
       b.querySelector(".n").textContent = future ? wk(k) : (k===t && !n ? "today" : `${n}/${tasks.length}`);
-      b.setAttribute("aria-label", `${nice(k)}${future?" (coming up)":`, ${n} of ${tasks.length} done`}`);
+      b.setAttribute("aria-label", `${nice(k)}${future?" (coming up)":`, ${n} of ${tasks.length} done${shots.length?`, ${shots.length} photo${shots.length===1?"":"s"}`:""}`}`);
       if(!future) b.addEventListener("click",()=>{ viewKey=k; render(); window.scrollTo({top:0,behavior:"smooth"}); });
       grid.appendChild(b);
     });
@@ -493,31 +541,43 @@ async function shrink(file){
 
 $("photoBtn").addEventListener("click",()=>$("photoInput").click());
 $("photoInput").addEventListener("change",async e=>{
-  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  const files=[...e.target.files]; e.target.value=""; if(!files.length) return;
   const k=viewKey; $("msg").className="msg"; $("msg").textContent="";
-  $("photoBtn").disabled=true; $("photoBtn").textContent="Saving…";
+  $("photoBtn").disabled=true;
+  const added=[];
   try{
-    const blob=await shrink(f);
-    const id=`${k}-${Date.now().toString(36)}`;
-    await putPhoto(id, blob);
-    const old=dayData(k).photo;
-    days[k]={...dayData(k), photo:id};
-    saveDay(k);
-    if(old){ forgetPhotoURL(old); delPhoto(old).catch(()=>{}); }
+    for(const [i,f] of files.entries()){
+      $("photoBtn").textContent = files.length>1 ? `Saving ${i+1} of ${files.length}…` : "Saving…";
+      const blob=await shrink(f);
+      // The counter keeps ids unique when several photos land in the same millisecond.
+      const id=`${k}-${Date.now().toString(36)}-${added.length}`;
+      await putPhoto(id, blob);
+      added.push(id);
+    }
   }catch(err){
     $("msg").textContent = (err && err.name==="QuotaExceededError")
       ? "No room left for photos. Save a backup, then remove a few old ones."
       : "Couldn't save that photo. Try taking it again.";
-  }finally{ $("photoBtn").disabled=false; render(); }
+  }finally{
+    if(added.length){
+      days[k]={...dayData(k), photos:[...(dayData(k).photos||[]), ...added]};
+      saveDay(k);
+    }
+    $("photoBtn").disabled=false;
+    render();
+    // slide the strip over to whatever we just added
+    if(added.length && k===viewKey) $("strip").scrollTo({left:$("strip").scrollWidth, behavior:"smooth"});
+  }
 });
-$("removePhoto").addEventListener("click",async()=>{
-  const k=viewKey, id=dayData(k).photo;
-  if(!id || !confirm("Remove the photo for "+short(k)+"?")) return;
-  days[k]={...dayData(k), photo:null};
+
+async function removePhoto(id){
+  const k=viewKey;
+  if(!confirm("Remove this photo?")) return;
+  days[k]={...dayData(k), photos:(dayData(k).photos||[]).filter(p=>p!==id)};
   saveDay(k); forgetPhotoURL(id);
   try{ await delPhoto(id); }catch(e){}
   render();
-});
+}
 $("backToday").addEventListener("click",()=>{viewKey=today();render();});
 
 /* ---------- editing the checklist ---------- */
@@ -594,7 +654,7 @@ $("restoreInput").addEventListener("change", async e=>{
     KEYS.forEach(k=>localStorage.removeItem(lsKeyFor(k)));
     localStorage.removeItem(LS_PREFIX+"settings");
     if(data.settings && Array.isArray(data.settings.tasks) && data.settings.tasks.length) lsWrite(LS_PREFIX+"settings", {tasks:data.settings.tasks});
-    Object.entries(data.days).forEach(([k,v])=>{ if(KEYS.includes(k)) lsWrite(lsKeyFor(k), {done:v.done||{}, photo:v.photo||null}); });
+    Object.entries(data.days).forEach(([k,v])=>{ if(KEYS.includes(k)) lsWrite(lsKeyFor(k), normalizeDay(v)); });
 
     loadAll(); render();
     backupMsg("Restored! Everything's back ♡", true);

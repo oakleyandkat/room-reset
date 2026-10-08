@@ -1,7 +1,7 @@
 # Room Reset
 
 A daily "is my room clean" checklist with a photo wall, for **Oct 7 – Dec 31, 2026** (86 days).
-Tick the boxes, snap one photo a day, watch the wall fill up with polaroids.
+Tick the boxes, snap as many photos a day as you like, watch the wall fill up with polaroids.
 
 Plain HTML, CSS and JavaScript. No build step, no npm, no framework — open `index.html` and it works.
 
@@ -19,8 +19,8 @@ Plain HTML, CSS and JavaScript. No build step, no npm, no framework — open `in
 
 Everything stays **on this phone/computer**. Nothing is uploaded anywhere.
 
-- **Checklists and settings** → `localStorage`, under keys like `rr:day-2026-10-09` and `rr:settings`.
-- **Photos** → `IndexedDB` (database `room-reset`, store `photos`). localStorage only holds about 5 MB of text, which is nowhere near enough for photos, so the shrunk JPEGs live here instead.
+- **Checklists and settings** → `localStorage`, under keys like `rr:day-2026-10-09` and `rr:settings`. A day looks like `{done:{taskId:true}, photos:["id","id"]}`.
+- **Photos** → `IndexedDB` (database `room-reset`, store `photos`). A day can hold as many as you want; the wall tile shows the first one with a little badge for the rest. localStorage only holds about 5 MB of text, which is nowhere near enough for photos, so the shrunk JPEGs live here instead.
 - Photos get resized to max 1400px and saved as JPEG before storing, so a 4 MB camera photo ends up more like 200 KB.
 - On first load the app asks the browser for **persistent storage** so it doesn't quietly throw the photos away when space gets tight.
 
