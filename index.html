@@ -42,10 +42,10 @@ body{background-color:var(--paper);color:var(--ink);font-family:var(--body);font
 .top{border:var(--line);border-radius:22px;background:var(--paper);padding:16px 16px 14px;position:relative;display:flex;gap:12px;align-items:center}
 .top svg.mascot{width:78px;height:78px;flex:none}
 .top .t{flex:1;min-width:0}
-h1{font-family:var(--hand);font-weight:700;font-size:2.4rem;line-height:.95;margin:0;letter-spacing:.01em}
-.date{font-family:var(--hand);font-size:1.25rem;color:var(--soft-ink);margin-top:4px}
+h1{font-family:var(--hand);font-weight:700;font-size:calc(2.4rem*var(--hand-scale,1));line-height:.95;margin:0;letter-spacing:.01em}
+.date{font-family:var(--hand);font-size:calc(1.25rem*var(--hand-scale,1));color:var(--soft-ink);margin-top:4px}
 .badge{border:var(--line);border-radius:16px;background:var(--butter);padding:6px 10px;text-align:center;flex:none;transform:rotate(3deg)}
-.badge b{font-family:var(--hand);font-size:2rem;line-height:1;display:block;font-variant-numeric:tabular-nums}
+.badge b{font-family:var(--hand);font-size:calc(2rem*var(--hand-scale,1));line-height:1;display:block;font-variant-numeric:tabular-nums}
 .badge span{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 .top .cloud{position:absolute;top:-18px;right:70px;width:64px}
 
@@ -60,12 +60,13 @@ h1{font-family:var(--hand);font-weight:700;font-size:2.4rem;line-height:.95;marg
 .ptext{display:flex;justify-content:space-between;gap:10px;font-family:var(--hand);font-size:1.15rem;font-variant-numeric:tabular-nums}
 .ptext .s{color:var(--soft-ink);text-align:right}
 
-.done-banner{border:var(--line);border-radius:16px;background:var(--mint);padding:10px 14px;font-family:var(--hand);font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:8px}
-.done-banner svg{width:28px;height:28px;flex:none}
+.done-banner{border:var(--line);border-radius:16px;background:var(--mint);padding:10px 14px;font-family:var(--hand);font-size:calc(1.35rem*var(--hand-scale,1));font-weight:700;display:flex;align-items:center;gap:8px}
+.done-banner svg{width:28px;height:28px;flex:none;display:block}
+.cheer-doodle{flex:none;display:block;width:28px;height:28px}
 
 /* checklist */
 .sheet{border:var(--line);border-radius:22px;background:var(--paper);padding:6px 8px}
-h2{font-family:var(--hand);font-weight:700;font-size:1.7rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;line-height:1}
+h2{font-family:var(--hand);font-weight:700;font-size:calc(1.7rem*var(--hand-scale,1));margin:0 0 10px;display:flex;align-items:center;gap:8px;line-height:1}
 h2 svg{width:26px;height:26px;flex:none}
 ul{list-style:none;margin:0;padding:0}
 li label{display:flex;align-items:center;gap:14px;padding:12px 8px;cursor:pointer;min-height:58px}
@@ -116,7 +117,7 @@ li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2
 
 /* photo wall */
 .month{display:flex;flex-direction:column;gap:14px}
-.month-h{font-family:var(--hand);font-weight:700;font-size:1.9rem;display:flex;align-items:center;gap:10px;margin:6px 0 0}
+.month-h{font-family:var(--hand);font-weight:700;font-size:calc(1.9rem*var(--hand-scale,1));display:flex;align-items:center;gap:10px;margin:6px 0 0}
 .month-h svg{width:30px;height:30px;flex:none}
 .month-h .pill{font-family:var(--body);font-size:.75rem;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:2px 9px;background:var(--paper)}
 .wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 12px}
@@ -142,7 +143,7 @@ li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2
 
 /* edit + backup drawers */
 details{border:var(--line);border-radius:18px;background:var(--paper);padding:4px 14px}
-details summary{cursor:pointer;font-family:var(--hand);font-size:1.35rem;font-weight:700;padding:8px 0}
+details summary{cursor:pointer;font-family:var(--hand);font-size:calc(1.35rem*var(--hand-scale,1));font-weight:700;padding:8px 0}
 details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 .edit{display:flex;flex-direction:column;gap:8px;padding-bottom:14px}
 .edit-row{display:flex;gap:8px}
@@ -162,12 +163,13 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 .mascot .eye{fill:var(--ink)}
 .mascot .mouth{stroke:var(--ink)}
 .mascot .cheek{fill:var(--deep)}
-.done-banner svg path{fill:var(--pink);stroke:var(--ink)}
 
 /* theme picker */
 .themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:14px}
 .theme{border:2px solid;border-radius:14px;padding:9px;cursor:pointer;display:flex;flex-direction:column;gap:7px;align-items:flex-start;font:inherit;text-align:left}
-.theme .nm{font-family:var(--hand);font-size:1.15rem;font-weight:700;line-height:1}
+.theme .nm{font-size:1.05rem;font-weight:700;line-height:1.05}
+.theme .em{font-size:1.5rem;line-height:1}
+.theme .top-row{display:flex;align-items:center;gap:7px;width:100%}
 .theme .dots{display:flex;gap:3px}
 .theme .dots i{width:14px;height:14px;border:1.5px solid;border-radius:99px;display:block}
 .theme[aria-pressed="true"]{box-shadow:0 0 0 3px currentColor}
@@ -178,7 +180,7 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 .splash.gone{opacity:0;pointer-events:none}
 .splash-card{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;padding:30px}
 .splash .mascot{width:132px;height:132px;animation:pop .6s cubic-bezier(.2,1.5,.5,1) both}
-.splash-title{font-family:var(--hand);font-weight:700;font-size:3rem;line-height:1;animation:rise .5s .18s both}
+.splash-title{font-family:var(--hand);font-weight:700;font-size:calc(3rem*var(--hand-scale,1));line-height:1;animation:rise .5s .18s both}
 .splash-sub{font-family:var(--hand);font-size:1.3rem;color:var(--soft-ink);animation:rise .5s .32s both}
 .splash .spark{position:absolute;width:26px;animation:twinkle 1.1s infinite}
 .splash .s1{top:14px;left:6px;animation-delay:.1s}
@@ -241,7 +243,7 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
     <div class="ptext"><span id="count">0 of 0 done</span><span class="s" id="saveState"></span></div>
   </div>
 
-  <div class="done-banner" id="doneBanner" hidden><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M15 26C4 18 3 11 6 7c3-3 7-2 9 2 2-4 6-5 9-2 3 4 2 11-9 19z" fill="#ffd3dc" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/></svg>All clean today! So proud of you.</div>
+  <div class="done-banner" id="doneBanner" hidden><span class="cheer-doodle" id="cheerDoodle"></span><span id="cheerText"></span></div>
 
   <section class="sheet">
     <ul id="list"></ul>
@@ -283,7 +285,7 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
   </details>
 
   <details id="themeDrawer">
-    <summary>🎨 My colours</summary>
+    <summary>🎨 My theme</summary>
     <div class="edit">
       <div class="themes" id="themeGrid"></div>
     </div>
@@ -322,33 +324,142 @@ const DEFAULT_TASKS = [
 /* 20 colour schemes. Each one only needs a paper colour, an ink colour and six
    "crayon" fills — the softer greys, the darker accent and the error red are all
    mixed from those, so a new theme is six colours and a name. */
+const FONTS = {
+  gaegu:    {google:"Gaegu:wght@400;700",   stack:'"Gaegu","Comic Sans MS",ui-rounded,cursive',          scale:1},
+  patrick:  {google:"Patrick+Hand",         stack:'"Patrick Hand","Bradley Hand","Gaegu",cursive',       scale:.95},
+  caveat:   {google:"Caveat:wght@400;700",  stack:'"Caveat","Snell Roundhand","Gaegu",cursive',          scale:1.15},
+  fredoka:  {google:"Fredoka:wght@400;600", stack:'"Fredoka",ui-rounded,"Gaegu",sans-serif',             scale:.84},
+  pacifico: {google:"Pacifico",             stack:'"Pacifico","Snell Roundhand","Gaegu",cursive',        scale:.8},
+  elite:    {google:"Special+Elite",        stack:'"Special Elite","American Typewriter","Gaegu",serif', scale:.84},
+  playfair: {google:"Playfair+Display:wght@700", stack:'"Playfair Display","Didot",Georgia,serif',       scale:.88},
+  bungee:   {google:"Bungee",               stack:'"Bungee",Impact,"Gaegu",sans-serif',                  scale:.62},
+  mono:     {google:null,                   stack:'"Menlo","Consolas",ui-monospace,monospace',           scale:.74},
+};
+
+/* A theme is a whole look, not just a palette: its own emoji, its own
+   handwriting, the doodles sprinkled over the paper, and its own way of
+   cheering you on. `doodles` is [wallpaper + empty tiles, section icons,
+   extra]; `award` is the sticker a fully-clean day gets. */
 const THEMES = [
-  {id:"crayon",      name:"Crayon Box",      paper:"#fffdfb", ink:"#1e1b1c", fills:["#ffd3dc","#fff1b8","#cdeedd","#d4e6ff","#e6dcff","#ffdcc4"]},
-  {id:"strawberry",  name:"Strawberry Milk", paper:"#fff7f8", ink:"#4a2028", fills:["#ffc2d4","#fff0d9","#ffd9e4","#ffe9c9","#f7a8c0","#fff5ea"]},
-  {id:"mintchip",    name:"Mint Chip",       paper:"#f6fffa", ink:"#243326", fills:["#b8e6cd","#e9f7ee","#cbb195","#f0e6d6","#9fdcbb","#d9c3a8"]},
-  {id:"lemonade",    name:"Lemonade Stand",  paper:"#fffef6", ink:"#39340d", fills:["#fff28a","#fffbd1","#bfe8ff","#ffd3dc","#d8f5bb","#ffe9a8"]},
-  {id:"cottoncandy", name:"Cotton Candy",    paper:"#fffafd", ink:"#3a2550", fills:["#ffc8e6","#c9e4ff","#e7d4ff","#ffe3f3","#b9f0ea","#fff0c7"]},
-  {id:"peachfuzz",   name:"Peach Fuzz",      paper:"#fffaf5", ink:"#45291a", fills:["#ffcfae","#ffe6d3","#ffb9a0","#d9e8cf","#fff0dd","#f3d9b8"]},
-  {id:"seaglass",    name:"Sea Glass",       paper:"#f6fdfc", ink:"#113c3f", fills:["#aee0dd","#d8f0ee","#f2e3c6","#ffc3b1","#cdeaf2","#eaf7f3"]},
-  {id:"matcha",      name:"Matcha Latte",    paper:"#fbfdf4", ink:"#2a3715", fills:["#cfe3a0","#e9f3cd","#d8c6a6","#f2ead6","#b5d684","#eadcc2"]},
-  {id:"bubblegum",   name:"Bubblegum Pop",   paper:"#fff9fd", ink:"#3d1733", fills:["#ffa8d8","#b6f2e3","#fff07a","#ffd0ea","#a8dcff","#ffc2a8"]},
-  {id:"jellybean",   name:"Jellybean",       paper:"#fffdf9", ink:"#22202e", fills:["#ffb3ba","#ffdfba","#ffffba","#baffc9","#bae1ff","#e4baff"]},
-  {id:"rainyday",    name:"Rainy Day",       paper:"#f7fafc", ink:"#1d2a33", fills:["#cfdae3","#e6edf3","#ffd97a","#b9cbd8","#dfe8ee","#a8bccb"]},
-  {id:"retro",       name:"Retro Seventies", paper:"#fdf8ec", ink:"#3a2a12", fills:["#f0c15c","#e2995c","#b9c46a","#f6e3b8","#d98b5f","#cfd79a"]},
-  {id:"mushroom",    name:"Mushroom Cottage",paper:"#fcf8f2", ink:"#3b2b22", fills:["#d7c9a8","#e9e0cc","#e0836f","#b7c2a0","#f2e9da","#c9a98a"]},
-  {id:"beachday",    name:"Beach Day",       paper:"#f8fdff", ink:"#16384a", fills:["#7fd8e8","#ffe9b8","#ffb49a","#bfeef5","#ffd76e","#e8f6d9"]},
-  {id:"autumn",      name:"Autumn Leaves",   paper:"#fdf9f3", ink:"#3a2314", fills:["#e59b5c","#d9b25c","#c26b55","#a8a35c","#f0dcc0","#e8c98a"]},
-  {id:"sakura",      name:"Cherry Blossom",  paper:"#fffafc", ink:"#40293a", fills:["#ffd6e3","#fff0f5","#d7ecd0","#f8e2ef","#ffe8d6","#e8f3e4"]},
-  {id:"highlighter", name:"Highlighter",     paper:"#fffef5", ink:"#171717", fills:["#fff35c","#9dff6e","#6ef0ff","#ff8ae0","#ffae4d","#c08aff"]},
-  {id:"moonlight",   name:"Moonlight",       paper:"#1f1c2e", ink:"#f3efff", dark:true, fills:["#4b4270","#6b5b9a","#3a3458","#7a6a2e","#5a4f82","#2e2a44"]},
-  {id:"galaxy",      name:"Galaxy",          paper:"#12152b", ink:"#e6ebff", dark:true, fills:["#303a6e","#3f2f6b","#1f2750","#4a3a7d","#2a3360","#5b3f74"]},
-  {id:"tokyo",       name:"Tokyo Neon",      paper:"#16121f", ink:"#f6eeff", dark:true, fills:["#8a2d6b","#2d6e8a","#5c2d8a","#1f4a5c","#8a4d2d","#3a2d6e"]},
+  {id:"crayon", name:"Crayon Box", emoji:"🖍️", font:"gaegu", paper:"#fffdfb", ink:"#1e1b1c",
+   fills:["#ffd3dc","#fff1b8","#cdeedd","#d4e6ff","#e6dcff","#ffdcc4"],
+   doodles:["flower","sparkle","star"], award:"star",
+   cheer:"All clean today! So proud of you.", prompt:"Snap your clean room!"},
+
+  {id:"strawberry", name:"Strawberry Milk", emoji:"🍓", font:"patrick", paper:"#fff7f8", ink:"#4a2028",
+   fills:["#ffc2d4","#fff0d9","#ffd9e4","#ffe9c9","#f7a8c0","#fff5ea"],
+   doodles:["cherry","heart","sparkle"], award:"heart",
+   cheer:"Sweet! Your room is spotless.", prompt:"Show me that tidy room!"},
+
+  {id:"mintchip", name:"Mint Chip", emoji:"🍦", font:"fredoka", paper:"#f6fffa", ink:"#243326",
+   fills:["#b8e6cd","#e9f7ee","#cbb195","#f0e6d6","#9fdcbb","#d9c3a8"],
+   doodles:["star","sparkle","heart"], award:"star",
+   cheer:"Cool and clean. Nice work.", prompt:"Scoop up a photo!"},
+
+  {id:"lemonade", name:"Lemonade Stand", emoji:"🍋", font:"gaegu", paper:"#fffef6", ink:"#39340d",
+   fills:["#fff28a","#fffbd1","#bfe8ff","#ffd3dc","#d8f5bb","#ffe9a8"],
+   doodles:["sun","sparkle","flower"], award:"sun",
+   cheer:"Fresh and squeaky clean!", prompt:"Snap your sunny clean room!"},
+
+  {id:"cottoncandy", name:"Cotton Candy", emoji:"🍭", font:"fredoka", paper:"#fffafd", ink:"#3a2550",
+   fills:["#ffc8e6","#c9e4ff","#e7d4ff","#ffe3f3","#b9f0ea","#fff0c7"],
+   doodles:["candy","cloud","sparkle"], award:"candy",
+   cheer:"Fluffy clean! Look at you go.", prompt:"Snap your sweet clean room!"},
+
+  {id:"peachfuzz", name:"Peach Fuzz", emoji:"🍑", font:"caveat", paper:"#fffaf5", ink:"#45291a",
+   fills:["#ffcfae","#ffe6d3","#ffb9a0","#d9e8cf","#fff0dd","#f3d9b8"],
+   doodles:["leaf","heart","sparkle"], award:"heart",
+   cheer:"Just peachy. Everything's done.", prompt:"Snap your cosy clean room!"},
+
+  {id:"seaglass", name:"Sea Glass", emoji:"🐚", font:"caveat", paper:"#f6fdfc", ink:"#113c3f",
+   fills:["#aee0dd","#d8f0ee","#f2e3c6","#ffc3b1","#cdeaf2","#eaf7f3"],
+   doodles:["shell","sparkle","star"], award:"shell",
+   cheer:"Smooth sailing — all clean!", prompt:"Snap your calm clean room!"},
+
+  {id:"matcha", name:"Matcha Latte", emoji:"🍵", font:"patrick", paper:"#fbfdf4", ink:"#2a3715",
+   fills:["#cfe3a0","#e9f3cd","#d8c6a6","#f2ead6","#b5d684","#eadcc2"],
+   doodles:["leaf","flower","sparkle"], award:"leaf",
+   cheer:"Calm, green and completely clean.", prompt:"Snap your peaceful room!"},
+
+  {id:"bubblegum", name:"Bubblegum Pop", emoji:"🫧", font:"fredoka", paper:"#fff9fd", ink:"#3d1733",
+   fills:["#ffa8d8","#b6f2e3","#fff07a","#ffd0ea","#a8dcff","#ffc2a8"],
+   doodles:["candy","star","heart"], award:"star",
+   cheer:"POP! Every single thing is done.", prompt:"Snap it! Show off that room!"},
+
+  {id:"jellybean", name:"Jellybean", emoji:"🍬", font:"fredoka", paper:"#fffdf9", ink:"#22202e",
+   fills:["#ffb3ba","#ffdfba","#ffffba","#baffc9","#bae1ff","#e4baff"],
+   doodles:["candy","sparkle","star"], award:"candy",
+   cheer:"Every colour of clean today!", prompt:"Snap your rainbow-clean room!"},
+
+  {id:"rainyday", name:"Rainy Day", emoji:"🌧️", font:"patrick", paper:"#f7fafc", ink:"#1d2a33",
+   fills:["#cfdae3","#e6edf3","#ffd97a","#b9cbd8","#dfe8ee","#a8bccb"],
+   doodles:["cloud","star","sparkle"], award:"cloud",
+   cheer:"Cosy and clean while it pours.", prompt:"Snap your cosy clean room!"},
+
+  {id:"retro", name:"Retro Seventies", emoji:"🕺", font:"pacifico", paper:"#fdf8ec", ink:"#3a2a12",
+   fills:["#f0c15c","#e2995c","#b9c46a","#f6e3b8","#d98b5f","#cfd79a"],
+   doodles:["flower","sun","star"], award:"flower",
+   cheer:"Far out — the whole room's done!", prompt:"Snap that groovy clean room!"},
+
+  {id:"mushroom", name:"Mushroom Cottage", emoji:"🍄", font:"elite", paper:"#fcf8f2", ink:"#3b2b22",
+   fills:["#d7c9a8","#e9e0cc","#e0836f","#b7c2a0","#f2e9da","#c9a98a"],
+   doodles:["mushroom","leaf","flower"], award:"mushroom",
+   cheer:"Snug as a cottage. All done!", prompt:"Snap your little clean nook!"},
+
+  {id:"beachday", name:"Beach Day", emoji:"🏖️", font:"caveat", paper:"#f8fdff", ink:"#16384a",
+   fills:["#7fd8e8","#ffe9b8","#ffb49a","#bfeef5","#ffd76e","#e8f6d9"],
+   doodles:["shell","sun","sparkle"], award:"sun",
+   cheer:"Clean room, no chores left. Go play!", prompt:"Snap your breezy clean room!"},
+
+  {id:"autumn", name:"Autumn Leaves", emoji:"🍂", font:"elite", paper:"#fdf9f3", ink:"#3a2314",
+   fills:["#e59b5c","#d9b25c","#c26b55","#a8a35c","#f0dcc0","#e8c98a"],
+   doodles:["leaf","mushroom","star"], award:"leaf",
+   cheer:"Everything tidied and tucked away.", prompt:"Snap your warm clean room!"},
+
+  {id:"sakura", name:"Cherry Blossom", emoji:"🌸", font:"caveat", paper:"#fffafc", ink:"#40293a",
+   fills:["#ffd6e3","#fff0f5","#d7ecd0","#f8e2ef","#ffe8d6","#e8f3e4"],
+   doodles:["flower","butterfly","sparkle"], award:"flower",
+   cheer:"Lovely. Not a petal out of place.", prompt:"Snap your pretty clean room!"},
+
+  {id:"highlighter", name:"Highlighter", emoji:"🖊️", font:"bungee", paper:"#fffef5", ink:"#171717",
+   fills:["#fff35c","#9dff6e","#6ef0ff","#ff8ae0","#ffae4d","#c08aff"],
+   doodles:["bolt","star","sparkle"], award:"bolt",
+   cheer:"DONE. Every single box.", prompt:"Snap it. Show the room."},
+
+  {id:"moonlight", name:"Moonlight", emoji:"🌙", font:"playfair", paper:"#1f1c2e", ink:"#f3efff", dark:true,
+   fills:["#4b4270","#6b5b9a","#3a3458","#7a6a2e","#5a4f82","#2e2a44"],
+   doodles:["moon","star","sparkle"], award:"moon",
+   cheer:"All clean. Sleep well tonight.", prompt:"Snap your quiet clean room!"},
+
+  {id:"galaxy", name:"Galaxy", emoji:"🌌", font:"playfair", paper:"#12152b", ink:"#e6ebff", dark:true,
+   fills:["#303a6e","#3f2f6b","#1f2750","#4a3a7d","#2a3360","#5b3f74"],
+   doodles:["star","moon","sparkle"], award:"star",
+   cheer:"Stellar. The whole room is done.", prompt:"Snap your out-of-this-world room!"},
+
+  {id:"tokyo", name:"Tokyo Neon", emoji:"🏮", font:"mono", paper:"#16121f", ink:"#f6eeff", dark:true,
+   fills:["#8a2d6b","#2d6e8a","#5c2d8a","#1f4a5c","#8a4d2d","#3a2d6e"],
+   doodles:["bolt","star","note"], award:"bolt",
+   cheer:"全部 done. Room is spotless.", prompt:"Snap your neon-clean room!"},
 ];
 
 let PASTELS = THEMES[0].fills.slice();
 let INK = THEMES[0].ink;
 let PAPER = THEMES[0].paper;
 let themeId = THEMES[0].id;
+let THEME = THEMES[0];
+
+/* Each theme's handwriting is only fetched when it's actually used — the
+   picker pulls all of them in one go when you open it. */
+const loadedFonts = new Set();
+function loadFonts(keys){
+  const want = keys.map(k => FONTS[k] && FONTS[k].google).filter(g => g && !loadedFonts.has(g));
+  if(!want.length) return;
+  want.forEach(g => loadedFonts.add(g));
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "https://fonts.googleapis.com/css2?" + want.map(g => "family=" + g).join("&") + "&display=swap";
+  document.head.appendChild(link);
+}
 
 /* blend two hex colours: t=0 gives a, t=1 gives b */
 const hexParts = c => [1,3,5].map(i => parseInt(c.slice(i,i+2),16));
@@ -377,8 +488,10 @@ function deepen(hex){
 
 function applyTheme(id){
   const t = THEMES.find(x => x.id === id) || THEMES[0];
-  themeId = t.id;
+  themeId = t.id; THEME = t;
   INK = t.ink; PAPER = t.paper; PASTELS = t.fills.slice();
+  const f = FONTS[t.font] || FONTS.gaegu;
+  loadFonts([t.font]);
   const r = document.documentElement.style;
   r.setProperty("--paper", t.paper);
   r.setProperty("--ink", t.ink);
@@ -388,6 +501,8 @@ function applyTheme(id){
   r.setProperty("--deep",     deepen(t.fills[0]));
   r.setProperty("--warn", t.dark ? "#ffa8b4" : "#b23a48");
   r.setProperty("--ok",   t.dark ? "#8fe0b8" : "#2f7d5b");
+  r.setProperty("--hand", f.stack);
+  r.setProperty("--hand-scale", f.scale);
   r.colorScheme = t.dark ? "dark" : "light";
   const meta = document.querySelector('meta[name="theme-color"]');
   if(meta) meta.content = t.fills[0];
@@ -402,19 +517,51 @@ const short = k => parseKey(k).toLocaleDateString(undefined,{month:"short",day:"
 const wk = k => parseKey(k).toLocaleDateString(undefined,{weekday:"short"});
 const clamp = k => k < START ? START : (k > END ? END : k);
 
-/* ---------- little doodles ---------- */
-const flower = (x,y,r,fill) => { let p=""; for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${r*.75}" fill="${fill}" stroke="${INK}" stroke-width="2"/>`;} return p+`<circle cx="${x}" cy="${y}" r="${r*.55}" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`; };
-const sparkle = (x,y,s) => `<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="${PAPER}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`;
+/* ---------- little doodles ----------
+   Every motif draws itself around (x,y) at roughly radius r, in the current
+   ink, so a theme can swap which ones get sprinkled around the page. */
+const S2 = n => n.toFixed(1);
+const MOTIFS = {
+  flower: (x,y,r,f) => {
+    let p="";
+    for(let i=0;i<5;i++){ const a=i*72*Math.PI/180;
+      p += `<circle cx="${S2(x+Math.cos(a)*r*.75)}" cy="${S2(y+Math.sin(a)*r*.75)}" r="${S2(r*.56)}" fill="${f}" stroke="${INK}" stroke-width="2"/>`; }
+    return p + `<circle cx="${x}" cy="${y}" r="${S2(r*.42)}" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`;
+  },
+  sparkle: (x,y,r,f) => `<path d="M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${y+r}Q${x} ${y} ${x-r} ${y}Q${x} ${y} ${x} ${y-r}Z" fill="${f}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`,
+  heart: (x,y,r,f) => `<path d="M${x} ${y+r*.9}C${x-r*1.3} ${y-r*.1} ${x-r*.75} ${y-r*1.1} ${x} ${y-r*.35}C${x+r*.75} ${y-r*1.1} ${x+r*1.3} ${y-r*.1} ${x} ${y+r*.9}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`,
+  star: (x,y,r,f) => {
+    let pts=[];
+    for(let i=0;i<10;i++){ const a=(i*36-90)*Math.PI/180, rr=i%2?r*.45:r;
+      pts.push(`${S2(x+Math.cos(a)*rr)} ${S2(y+Math.sin(a)*rr)}`); }
+    return `<path d="M${pts.join("L")}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`;
+  },
+  mushroom: (x,y,r,f) => `<path d="M${x-r} ${y} a${r} ${r*.85} 0 0 1 ${r*2} 0Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M${x-r*.38} ${y} v${r*.75} a${r*.38} ${r*.38} 0 0 0 ${r*.76} 0 v-${r*.75}Z" fill="${PAPER}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="${S2(x-r*.4)}" cy="${S2(y-r*.3)}" r="${S2(r*.17)}" fill="${PAPER}"/><circle cx="${S2(x+r*.35)}" cy="${S2(y-r*.42)}" r="${S2(r*.14)}" fill="${PAPER}"/>`,
+  leaf: (x,y,r,f) => `<path d="M${x} ${y-r}C${x+r} ${y-r*.5} ${x+r*.6} ${y+r*.7} ${x} ${y+r}C${x-r*.6} ${y+r*.7} ${x-r} ${y-r*.5} ${x} ${y-r}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M${x} ${y-r*.75}V${S2(y+r*.8)}" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>`,
+  shell: (x,y,r,f) => `<path d="M${x-r} ${y+r*.6} a${r} ${r} 0 0 1 ${r*2} 0Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>` + [-.5,0,.5].map(o=>`<path d="M${x} ${S2(y+r*.6)} L${S2(x+r*o*1.3)} ${S2(y-r*.5)}" stroke="${INK}" stroke-width="1.5" stroke-linecap="round"/>`).join(""),
+  cloud: (x,y,r,f) => `<path d="M${x-r} ${y+r*.45} a${r*.45} ${r*.45} 0 0 1 ${r*.1} -${r*.85} a${r*.55} ${r*.55} 0 0 1 ${r*1} -${r*.2} a${r*.45} ${r*.45} 0 0 1 ${r*.85} ${r*.5} a${r*.38} ${r*.38} 0 0 1 -${r*.1} ${r*.55}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`,
+  moon: (x,y,r,f) => `<path d="M${S2(x+r*.35)} ${S2(y-r*.9)}a${r} ${r} 0 1 0 ${r*.55} ${r*1.6}a${r*.8} ${r*.8} 0 1 1 -${r*.55} -${r*1.6}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`,
+  candy: (x,y,r,f) => `<circle cx="${x}" cy="${y}" r="${S2(r*.6)}" fill="${f}" stroke="${INK}" stroke-width="2"/><path d="M${S2(x-r*.6)} ${y} l-${r*.55} -${r*.45} v${r*.9}Z M${S2(x+r*.6)} ${y} l${r*.55} -${r*.45} v${r*.9}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`,
+  bow: (x,y,r,f) => `<path d="M${x} ${y} l-${r} -${r*.6} v${r*1.2}Z M${x} ${y} l${r} -${r*.6} v${r*1.2}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="${x}" cy="${y}" r="${S2(r*.26)}" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`,
+  butterfly: (x,y,r,f) => `<path d="M${x} ${y} C${x-r*1.2} ${y-r*1.1} ${x-r*1.25} ${y+r*.35} ${x} ${y}Z M${x} ${y} C${x+r*1.2} ${y-r*1.1} ${x+r*1.25} ${y+r*.35} ${x} ${y}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M${x} ${S2(y-r*.5)} V${S2(y+r*.75)}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`,
+  bolt: (x,y,r,f) => `<path d="M${S2(x+r*.3)} ${S2(y-r)} L${S2(x-r*.6)} ${S2(y+r*.15)} L${S2(x-r*.05)} ${S2(y+r*.15)} L${S2(x-r*.3)} ${S2(y+r)} L${S2(x+r*.65)} ${S2(y-r*.2)} L${S2(x+r*.1)} ${S2(y-r*.2)}Z" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`,
+  note: (x,y,r,f) => `<circle cx="${S2(x-r*.35)}" cy="${S2(y+r*.6)}" r="${S2(r*.4)}" fill="${f}" stroke="${INK}" stroke-width="2"/><path d="M${S2(x+r*.05)} ${S2(y+r*.6)} V${S2(y-r)} l${r*.7} ${r*.3}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  sun: (x,y,r,f) => `<circle cx="${x}" cy="${y}" r="${S2(r*.55)}" fill="${f}" stroke="${INK}" stroke-width="2"/>` + [0,45,90,135,180,225,270,315].map(a=>{const t=a*Math.PI/180;return `<path d="M${S2(x+Math.cos(t)*r*.8)} ${S2(y+Math.sin(t)*r*.8)}L${S2(x+Math.cos(t)*r*1.05)} ${S2(y+Math.sin(t)*r*1.05)}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`}).join(""),
+  cherry: (x,y,r,f) => `<circle cx="${S2(x-r*.45)}" cy="${S2(y+r*.45)}" r="${S2(r*.45)}" fill="${f}" stroke="${INK}" stroke-width="2"/><circle cx="${S2(x+r*.5)}" cy="${S2(y+r*.6)}" r="${S2(r*.38)}" fill="${f}" stroke="${INK}" stroke-width="2"/><path d="M${S2(x-r*.45)} ${y} Q${x} ${S2(y-r)} ${S2(x+r*.5)} ${S2(y+r*.2)}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`,
+};
+
+const motif = (name,x,y,r,fill) => (MOTIFS[name] || MOTIFS.flower)(x,y,r,fill);
 const svgWrap = (w,h,inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" aria-hidden="true">${inner}</svg>`;
-const flowerIcon = fill => svgWrap(40,40, flower(20,20,7,fill));
-const starIcon = () => svgWrap(24,24,`<path d="M12 2l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 16.6 6.1 19.8l1.3-6.5L2.5 8.8 9.1 8z" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
-const sunIcon = () => svgWrap(26,26,`<circle cx="13" cy="13" r="6" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<path d="M${13+Math.cos(r)*9} ${13+Math.sin(r)*9}L${13+Math.cos(r)*12} ${13+Math.sin(r)*12}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`}).join(""));
+const motifIcon = (name,fill) => svgWrap(40,40, motif(name,20,20,13,fill));
+const starIcon = () => svgWrap(24,24, motif(THEME.award||"star",12,12,10,PASTELS[1]));
+const sunIcon = () => svgWrap(28,28, motif(THEME.doodles[1],14,14,11,PASTELS[1]));
 const cameraIcon = () => svgWrap(26,26,`<rect x="3" y="7" width="20" height="14" rx="4" fill="${PASTELS[0]}" stroke="${INK}" stroke-width="2"/><path d="M9 7l2-3h4l2 3" fill="${PASTELS[0]}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="13" cy="14" r="4" fill="${PASTELS[3]}" stroke="${INK}" stroke-width="2"/>`);
 
 /* paper background sprinkled with tiny doodles */
 function paintBackground(){
+  const [a,b,c] = THEME.doodles;
   const bg = svgWrap(220,220,
-    `<g opacity=".55">${flower(30,34,4.5,PASTELS[0])}${sparkle(150,40,6)}${flower(185,150,4.5,PASTELS[2])}${sparkle(60,170,5)}${flower(110,110,3.5,PASTELS[4])}<circle cx="200" cy="90" r="2.5" fill="${INK}"/><circle cx="20" cy="110" r="2" fill="${INK}"/></g>`);
+    `<g opacity=".55">${motif(a,30,34,7,PASTELS[0])}${motif(b,150,40,8,PASTELS[1])}${motif(c,185,150,7,PASTELS[2])}${motif(b,60,170,7,PASTELS[3])}${motif(a,110,110,6,PASTELS[4])}<circle cx="200" cy="90" r="2.5" fill="${INK}"/><circle cx="20" cy="110" r="2" fill="${INK}"/></g>`);
   document.body.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(bg)}")`;
   document.body.style.backgroundSize = "220px 220px";
 }
@@ -574,6 +721,8 @@ function updateStatus(){
   const bar=$("bar"); bar.style.width = tasks.length ? (n/tasks.length*100)+"%" : "0"; bar.classList.toggle("zero", n===0);
   $("count").textContent = `${n} of ${tasks.length} done`;
   $("doneBanner").hidden = !isFull(d);
+  $("cheerText").textContent = THEME.cheer;
+  $("cheerDoodle").innerHTML = motifIcon(THEME.award || "heart", PASTELS[0]);
   renderWall(); renderStreak();
 }
 
@@ -634,7 +783,7 @@ function polaroidEl(id,i,n){
     x.addEventListener("click", ()=>removePhoto(id));
     el.appendChild(x);
   } else {
-    ph.innerHTML = `<div class="ph-empty">${flowerIcon("#ffd3dc").replace("<svg",'<svg style="width:54px;height:54px;display:block;margin:0 auto 6px"')}Snap your clean room!</div>`;
+    ph.innerHTML = `<div class="ph-empty">${motifIcon(THEME.doodles[0], PASTELS[0]).replace("<svg",'<svg style="width:54px;height:54px;display:block;margin:0 auto 6px"')}${THEME.prompt}</div>`;
   }
   el.querySelector(".cap").textContent = `${wk(viewKey)} · ${short(viewKey)}` + (n>1 ? ` · ${i+1} of ${n}` : "");
   return el;
@@ -652,7 +801,7 @@ function renderWall(){
     const keys=groups[m];
     const done=keys.filter(k=>isFull(dayData(k))).length;
     const sec=document.createElement("div"); sec.className="month";
-    sec.innerHTML=`<div class="month-h">${svgWrap(30,30,flower(15,15,5.5,PASTELS[mi*2%6]))}<span></span><span class="pill"></span></div><div class="wall"></div>`;
+    sec.innerHTML=`<div class="month-h">${svgWrap(30,30,motif(THEME.doodles[mi%3],15,15,11,PASTELS[mi*2%6]))}<span></span><span class="pill"></span></div><div class="wall"></div>`;
     sec.querySelector(".month-h span").textContent = parseKey(keys[0]).toLocaleDateString(undefined,{month:"long"});
     sec.querySelector(".pill").textContent = `${done} clean`;
     const grid=sec.querySelector(".wall");
@@ -664,7 +813,7 @@ function renderWall(){
       const color=PASTELS[(i+mi)%6];
       const shots = d.photos || [];
       if(shots.length>1) b.classList.add("stack");
-      b.innerHTML=`<div class="ph" style="background:${color}">${shots.length?"":flowerIcon("#fffdfb")}</div><div class="d"></div><div class="n"></div>${isFull(d)?'<span class="star">'+starIcon()+'</span>':''}${shots.length>1?`<span class="count">${shots.length}</span>`:""}`;
+      b.innerHTML=`<div class="ph" style="background:${color}">${shots.length?"":motifIcon(THEME.doodles[0], PAPER)}</div><div class="d"></div><div class="n"></div>${isFull(d)?'<span class="star">'+starIcon()+'</span>':''}${shots.length>1?`<span class="count">${shots.length}</span>`:""}`;
       if(shots.length) b.querySelector(".ph").appendChild(lazyImage(shots[0],""));
       b.querySelector(".d").textContent = short(k);
       b.querySelector(".n").textContent = future ? wk(k) : (k===t && !n ? "today" : `${n}/${tasks.length}`);
@@ -775,8 +924,13 @@ function renderThemes(){
     b.type = "button"; b.className = "theme";
     b.style.background = t.paper; b.style.color = t.ink; b.style.borderColor = t.ink;
     b.setAttribute("aria-pressed", String(t.id === themeId));
-    b.innerHTML = `<span class="nm"></span><span class="dots">${t.fills.map(f=>`<i style="background:${f}"></i>`).join("")}</span>`;
-    b.querySelector(".nm").textContent = t.name;
+    const f = FONTS[t.font] || FONTS.gaegu;
+    b.innerHTML = `<span class="top-row"><span class="em">${t.emoji}</span><span class="nm"></span></span>` +
+                  `<span class="dots">${t.fills.map(c=>`<i style="background:${c};border-color:${t.ink}"></i>`).join("")}</span>`;
+    const nm = b.querySelector(".nm");
+    nm.textContent = t.name;
+    nm.style.fontFamily = f.stack;
+    nm.style.fontSize = (1.05 * f.scale).toFixed(2) + "rem";   // wide fonts like Bungee need reining in
     b.addEventListener("click", ()=>{
       applyTheme(t.id);
       saveSettings(t.name + " ♡");
@@ -786,7 +940,11 @@ function renderThemes(){
     g.appendChild(b);
   });
 }
-$("themeDrawer").addEventListener("toggle", e=>{ if(e.target.open) renderThemes(); });
+$("themeDrawer").addEventListener("toggle", e=>{
+  if(!e.target.open) return;
+  loadFonts(THEMES.map(t => t.font));   // so every card can show its own handwriting
+  renderThemes();
+});
 
 /* ---------- how many days ---------- */
 function showDateCount(){

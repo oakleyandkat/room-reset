@@ -37,7 +37,7 @@ Then open <http://localhost:8123>. (Open the file directly and the service worke
 ## Changing it
 
 - **Different dates?** Use the **📅 Change my dates** drawer in the app — pick any start and end you like, up to 400 days. (`DEFAULT_START` / `DEFAULT_END` in the script are only the first-run defaults.) Changing the window never deletes anything; days outside it are just hidden.
-- **Different colours?** **🎨 My colours** has 20 themes. A theme is six "crayon" fills plus a paper and ink colour — the greys, the accent and the error red are mixed from those, so adding a 21st is one line in the `THEMES` array.
+- **Different look?** **🎨 My theme** has 20 of them. A theme isn't just colours — it's an emoji, a handwriting font, the doodles sprinkled over the paper (mushrooms, shells, moons, lightning…), the sticker a perfect day earns, and its own cheer line. Adding a 21st is one entry in the `THEMES` array; the greys, the accent and the error red are all mixed from the six fills, and the font is only downloaded when a theme that uses it is picked.
 - **Different default tasks?** `DEFAULT_TASKS` near the top of the `<script>`. (Tasks you've already edited in the app win — they're saved in `rr:settings`.)
 - **Changed the app and the phone keeps showing the old one?** Bump `CACHE` in `sw.js` (`room-reset-v1` → `v2`). That's the service worker's way of being told "throw out what you cached."
 
