@@ -19,7 +19,7 @@ Plain HTML, CSS and JavaScript. No build step, no npm, no framework — open `in
 
 Everything stays **on this phone/computer**. Nothing is uploaded anywhere.
 
-- **Checklists and settings** → `localStorage`, under keys like `rr:day-2026-10-09` and `rr:settings`. A day looks like `{done:{taskId:true}, photos:["id","id"]}`.
+- **Checklists and settings** (tasks, dates, theme) → `localStorage`, under keys like `rr:day-2026-10-09` and `rr:settings`. A day looks like `{done:{taskId:true}, photos:["id","id"]}`.
 - **Photos** → `IndexedDB` (database `room-reset`, store `photos`). A day can hold as many as you want; the wall tile shows the first one with a little badge for the rest. localStorage only holds about 5 MB of text, which is nowhere near enough for photos, so the shrunk JPEGs live here instead.
 - Photos get resized to max 1400px and saved as JPEG before storing, so a 4 MB camera photo ends up more like 200 KB.
 - On first load the app asks the browser for **persistent storage** so it doesn't quietly throw the photos away when space gets tight.
@@ -36,8 +36,9 @@ Then open <http://localhost:8123>. (Open the file directly and the service worke
 
 ## Changing it
 
-- **Different dates?** `START` and `END` at the top of the `<script>`.
-- **Different default tasks?** `DEFAULT_TASKS`, just below that. (Tasks you've already edited in the app win — they're saved in `rr:settings`.)
+- **Different dates?** Use the **📅 Change my dates** drawer in the app — pick any start and end you like, up to 400 days. (`DEFAULT_START` / `DEFAULT_END` in the script are only the first-run defaults.) Changing the window never deletes anything; days outside it are just hidden.
+- **Different colours?** **🎨 My colours** has 20 themes. A theme is six "crayon" fills plus a paper and ink colour — the greys, the accent and the error red are mixed from those, so adding a 21st is one line in the `THEMES` array.
+- **Different default tasks?** `DEFAULT_TASKS` near the top of the `<script>`. (Tasks you've already edited in the app win — they're saved in `rr:settings`.)
 - **Changed the app and the phone keeps showing the old one?** Bump `CACHE` in `sw.js` (`room-reset-v1` → `v2`). That's the service worker's way of being told "throw out what you cached."
 
 ## Later

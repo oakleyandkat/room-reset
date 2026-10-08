@@ -25,6 +25,7 @@
   color-scheme:light;
   --paper:#fffdfb; --ink:#1e1b1c; --soft-ink:#6b6466;
   --pink:#ffd3dc; --butter:#fff1b8; --mint:#cdeedd; --sky:#d4e6ff; --lilac:#e6dcff; --peach:#ffdcc4;
+  --deep:#ffc2cf; --rule:#cfc8ca; --warn:#b23a48; --ok:#2f7d5b;
   --hand:"Gaegu","Comic Sans MS",ui-rounded,cursive;
   --body:"Nunito",ui-rounded,system-ui,-apple-system,sans-serif;
   --line:2.5px solid var(--ink);
@@ -54,7 +55,7 @@ h1{font-family:var(--hand);font-weight:700;font-size:2.4rem;line-height:.95;marg
 /* progress */
 .prog{display:flex;flex-direction:column;gap:6px}
 .bar{height:20px;border:var(--line);border-radius:99px;background:var(--paper);overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--pink) 0 8px,#ffc2cf 8px 16px);border-right:2.5px solid var(--ink);transition:width .35s}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--pink) 0 8px,var(--deep) 8px 16px);border-right:2.5px solid var(--ink);transition:width .35s}
 .bar i.zero{border-right:0}
 .ptext{display:flex;justify-content:space-between;gap:10px;font-family:var(--hand);font-size:1.15rem;font-variant-numeric:tabular-nums}
 .ptext .s{color:var(--soft-ink);text-align:right}
@@ -68,7 +69,7 @@ h2{font-family:var(--hand);font-weight:700;font-size:1.7rem;margin:0 0 10px;disp
 h2 svg{width:26px;height:26px;flex:none}
 ul{list-style:none;margin:0;padding:0}
 li label{display:flex;align-items:center;gap:14px;padding:12px 8px;cursor:pointer;min-height:58px}
-li+li label{border-top:2px dashed #cfc8ca}
+li+li label{border-top:2px dashed var(--rule)}
 li input{appearance:none;-webkit-appearance:none;width:32px;height:32px;border:var(--line);border-radius:10px;background:var(--paper);flex:none;display:grid;place-items:center;margin:0;cursor:pointer;transition:transform .15s}
 li:nth-child(6n+1) input:checked{background:var(--pink)}
 li:nth-child(6n+2) input:checked{background:var(--butter)}
@@ -110,8 +111,8 @@ li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2
 .btn-row{display:flex;gap:10px}
 .linkish{background:none;border:0;font:800 .9rem var(--body);color:var(--soft-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px;align-self:center}
 .linkish:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
-.msg{font-weight:700;color:#b23a48;margin:0;min-height:1em;font-size:.92rem}
-.msg.ok{color:#2f7d5b}
+.msg{font-weight:700;color:var(--warn);margin:0;min-height:1em;font-size:.92rem}
+.msg.ok{color:var(--ok)}
 
 /* photo wall */
 .month{display:flex;flex-direction:column;gap:14px}
@@ -148,23 +149,83 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 .edit-row input{flex:1;min-width:0;font:600 1rem var(--body);padding:10px 12px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink)}
 .x{border:2px solid var(--ink);background:var(--pink);color:var(--ink);border-radius:12px;width:46px;font-size:1.2rem;font-weight:800;cursor:pointer;flex:none}
 .note{font-size:.85rem;color:var(--soft-ink);font-weight:600;margin:0}
+.field{display:flex;align-items:center;gap:10px;font-family:var(--hand);font-size:1.25rem}
+.field span{width:58px;flex:none}
+.field input{flex:1;min-width:0;font:600 1rem var(--body);padding:10px 12px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink)}
 .foot{font-family:var(--hand);font-size:1.15rem;text-align:center;color:var(--soft-ink)}
-@media (prefers-reduced-motion:reduce){.bar i,.pol,li input,.btn{transition:none}}
+/* The doodles in the markup carry fill="" attributes; these rules outrank them,
+   so the cat and the cloud recolour with the rest of the theme. */
+.cloud path{fill:var(--sky);stroke:var(--ink)}
+.mascot .ear,.mascot .head{fill:var(--paper);stroke:var(--ink)}
+.mascot .ear-in{stroke:var(--pink)}
+.mascot .nose{fill:var(--peach);stroke:var(--ink)}
+.mascot .eye{fill:var(--ink)}
+.mascot .mouth{stroke:var(--ink)}
+.mascot .cheek{fill:var(--deep)}
+.done-banner svg path{fill:var(--pink);stroke:var(--ink)}
+
+/* theme picker */
+.themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:14px}
+.theme{border:2px solid;border-radius:14px;padding:9px;cursor:pointer;display:flex;flex-direction:column;gap:7px;align-items:flex-start;font:inherit;text-align:left}
+.theme .nm{font-family:var(--hand);font-size:1.15rem;font-weight:700;line-height:1}
+.theme .dots{display:flex;gap:3px}
+.theme .dots i{width:14px;height:14px;border:1.5px solid;border-radius:99px;display:block}
+.theme[aria-pressed="true"]{box-shadow:0 0 0 3px currentColor}
+.theme:focus-visible{outline:3px dashed currentColor;outline-offset:3px}
+
+/* opening screen */
+.splash{position:fixed;inset:0;z-index:50;background:var(--paper);display:grid;place-items:center;transition:opacity .5s ease}
+.splash.gone{opacity:0;pointer-events:none}
+.splash-card{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;padding:30px}
+.splash .mascot{width:132px;height:132px;animation:pop .6s cubic-bezier(.2,1.5,.5,1) both}
+.splash-title{font-family:var(--hand);font-weight:700;font-size:3rem;line-height:1;animation:rise .5s .18s both}
+.splash-sub{font-family:var(--hand);font-size:1.3rem;color:var(--soft-ink);animation:rise .5s .32s both}
+.splash .spark{position:absolute;width:26px;animation:twinkle 1.1s infinite}
+.splash .s1{top:14px;left:6px;animation-delay:.1s}
+.splash .s2{top:44px;right:2px;animation-delay:.45s}
+.splash .s3{bottom:62px;left:0;animation-delay:.75s}
+@keyframes pop{from{transform:scale(.4) rotate(-14deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes rise{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(-10deg);opacity:.3}50%{transform:scale(1) rotate(10deg);opacity:1}}
+
+@media (prefers-reduced-motion:reduce){
+  .bar i,.pol,li input,.btn{transition:none}
+  .splash .mascot,.splash-title,.splash-sub,.splash .spark{animation:none}
+}
 </style>
 </head>
 <body>
+
+<div class="splash" id="splash" role="status" aria-label="Opening Room Reset">
+  <div class="splash-card">
+    <svg class="spark s1" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1Q10 10 19 10Q10 10 10 19Q10 10 1 10Q10 10 10 1Z" fill="var(--butter)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg class="spark s2" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1Q10 10 19 10Q10 10 10 19Q10 10 1 10Q10 10 10 1Z" fill="var(--mint)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg class="spark s3" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1Q10 10 19 10Q10 10 10 19Q10 10 1 10Q10 10 10 1Z" fill="var(--pink)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg class="mascot" viewBox="0 0 80 80" aria-hidden="true">
+      <path class="ear" d="M17 30 L19 9 L34 21 Z M63 30 L61 9 L46 21 Z" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/>
+      <path class="ear-in" d="M21 14 l9 8 M59 14 l-9 8" stroke="#ffd3dc" stroke-width="4" stroke-linecap="round"/>
+      <ellipse class="head" cx="40" cy="44" rx="29" ry="25" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5"/>
+      <path class="nose" d="M40 19c-6 2-10 7-10 7 6 0 12-3 14-6z" fill="#ffdcc4" stroke="#1e1b1c" stroke-width="2" stroke-linejoin="round"/>
+      <circle class="eye" cx="29" cy="43" r="3" fill="#1e1b1c"/><circle class="eye" cx="51" cy="43" r="3" fill="#1e1b1c"/>
+      <path class="mouth" d="M35 49 q2.5 3 5 0 q2.5 3 5 0" fill="none" stroke="#1e1b1c" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse class="cheek" cx="22" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/><ellipse class="cheek" cx="58" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/>
+    </svg>
+    <div class="splash-title">Room Reset</div>
+    <div class="splash-sub" id="splashSub">let's tidy up ♡</div>
+  </div>
+</div>
 
 <div class="wrap">
   <div class="top">
     <svg class="cloud" viewBox="0 0 64 30" aria-hidden="true"><path d="M10 26c-6 0-8-8-2-10 0-7 9-9 12-4 3-8 16-8 18 0 6-3 13 1 11 7 6 1 6 7 0 7z" fill="#d4e6ff" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/></svg>
     <svg class="mascot" viewBox="0 0 80 80" aria-hidden="true">
-      <path d="M17 30 L19 9 L34 21 Z M63 30 L61 9 L46 21 Z" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M21 14 l9 8 M59 14 l-9 8" stroke="#ffd3dc" stroke-width="4" stroke-linecap="round"/>
-      <ellipse cx="40" cy="44" rx="29" ry="25" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5"/>
-      <path d="M40 19c-6 2-10 7-10 7 6 0 12-3 14-6z" fill="#ffdcc4" stroke="#1e1b1c" stroke-width="2" stroke-linejoin="round"/>
-      <circle cx="29" cy="43" r="3" fill="#1e1b1c"/><circle cx="51" cy="43" r="3" fill="#1e1b1c"/>
-      <path d="M35 49 q2.5 3 5 0 q2.5 3 5 0" fill="none" stroke="#1e1b1c" stroke-width="2.2" stroke-linecap="round"/>
-      <ellipse cx="22" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/><ellipse cx="58" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/>
+      <path class="ear" d="M17 30 L19 9 L34 21 Z M63 30 L61 9 L46 21 Z" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/>
+      <path class="ear-in" d="M21 14 l9 8 M59 14 l-9 8" stroke="#ffd3dc" stroke-width="4" stroke-linecap="round"/>
+      <ellipse class="head" cx="40" cy="44" rx="29" ry="25" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5"/>
+      <path class="nose" d="M40 19c-6 2-10 7-10 7 6 0 12-3 14-6z" fill="#ffdcc4" stroke="#1e1b1c" stroke-width="2" stroke-linejoin="round"/>
+      <circle class="eye" cx="29" cy="43" r="3" fill="#1e1b1c"/><circle class="eye" cx="51" cy="43" r="3" fill="#1e1b1c"/>
+      <path class="mouth" d="M35 49 q2.5 3 5 0 q2.5 3 5 0" fill="none" stroke="#1e1b1c" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse class="cheek" cx="22" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/><ellipse class="cheek" cx="58" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/>
     </svg>
     <div class="t">
       <h1>Room Reset</h1>
@@ -209,6 +270,25 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
     </div>
   </details>
 
+  <details id="datesDrawer">
+    <summary>📅 Change my dates</summary>
+    <div class="edit">
+      <p class="note">Pick the stretch of days you want to keep your room clean for. Nothing you've already ticked off gets deleted — days outside the new window are just hidden.</p>
+      <label class="field"><span>Start</span><input type="date" id="startDate"></label>
+      <label class="field"><span>End</span><input type="date" id="endDate"></label>
+      <p class="note" id="dateCount"></p>
+      <button class="btn alt" id="saveDates" type="button">Save my dates</button>
+      <p class="msg" id="dateMsg"></p>
+    </div>
+  </details>
+
+  <details id="themeDrawer">
+    <summary>🎨 My colours</summary>
+    <div class="edit">
+      <div class="themes" id="themeGrid"></div>
+    </div>
+  </details>
+
   <details id="backupDrawer">
     <summary>⬇ Backup &amp; restore</summary>
     <div class="edit">
@@ -229,7 +309,8 @@ details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 <script>
 "use strict";
 
-const START = "2026-10-07", END = "2026-12-31";
+const DEFAULT_START = "2026-10-07", DEFAULT_END = "2026-12-31", MAX_DAYS = 400;
+let START = DEFAULT_START, END = DEFAULT_END;
 const DEFAULT_TASKS = [
   {id:"bed",label:"Make the bed"},
   {id:"clothes",label:"Clothes in hamper or put away"},
@@ -238,8 +319,80 @@ const DEFAULT_TASKS = [
   {id:"dishes",label:"Cups and dishes out of the room"},
   {id:"trash",label:"Trash in the bin"},
 ];
-const PASTELS = ["#ffd3dc","#fff1b8","#cdeedd","#d4e6ff","#e6dcff","#ffdcc4"];
-const INK = "#1e1b1c";
+/* 20 colour schemes. Each one only needs a paper colour, an ink colour and six
+   "crayon" fills — the softer greys, the darker accent and the error red are all
+   mixed from those, so a new theme is six colours and a name. */
+const THEMES = [
+  {id:"crayon",      name:"Crayon Box",      paper:"#fffdfb", ink:"#1e1b1c", fills:["#ffd3dc","#fff1b8","#cdeedd","#d4e6ff","#e6dcff","#ffdcc4"]},
+  {id:"strawberry",  name:"Strawberry Milk", paper:"#fff7f8", ink:"#4a2028", fills:["#ffc2d4","#fff0d9","#ffd9e4","#ffe9c9","#f7a8c0","#fff5ea"]},
+  {id:"mintchip",    name:"Mint Chip",       paper:"#f6fffa", ink:"#243326", fills:["#b8e6cd","#e9f7ee","#cbb195","#f0e6d6","#9fdcbb","#d9c3a8"]},
+  {id:"lemonade",    name:"Lemonade Stand",  paper:"#fffef6", ink:"#39340d", fills:["#fff28a","#fffbd1","#bfe8ff","#ffd3dc","#d8f5bb","#ffe9a8"]},
+  {id:"cottoncandy", name:"Cotton Candy",    paper:"#fffafd", ink:"#3a2550", fills:["#ffc8e6","#c9e4ff","#e7d4ff","#ffe3f3","#b9f0ea","#fff0c7"]},
+  {id:"peachfuzz",   name:"Peach Fuzz",      paper:"#fffaf5", ink:"#45291a", fills:["#ffcfae","#ffe6d3","#ffb9a0","#d9e8cf","#fff0dd","#f3d9b8"]},
+  {id:"seaglass",    name:"Sea Glass",       paper:"#f6fdfc", ink:"#113c3f", fills:["#aee0dd","#d8f0ee","#f2e3c6","#ffc3b1","#cdeaf2","#eaf7f3"]},
+  {id:"matcha",      name:"Matcha Latte",    paper:"#fbfdf4", ink:"#2a3715", fills:["#cfe3a0","#e9f3cd","#d8c6a6","#f2ead6","#b5d684","#eadcc2"]},
+  {id:"bubblegum",   name:"Bubblegum Pop",   paper:"#fff9fd", ink:"#3d1733", fills:["#ffa8d8","#b6f2e3","#fff07a","#ffd0ea","#a8dcff","#ffc2a8"]},
+  {id:"jellybean",   name:"Jellybean",       paper:"#fffdf9", ink:"#22202e", fills:["#ffb3ba","#ffdfba","#ffffba","#baffc9","#bae1ff","#e4baff"]},
+  {id:"rainyday",    name:"Rainy Day",       paper:"#f7fafc", ink:"#1d2a33", fills:["#cfdae3","#e6edf3","#ffd97a","#b9cbd8","#dfe8ee","#a8bccb"]},
+  {id:"retro",       name:"Retro Seventies", paper:"#fdf8ec", ink:"#3a2a12", fills:["#f0c15c","#e2995c","#b9c46a","#f6e3b8","#d98b5f","#cfd79a"]},
+  {id:"mushroom",    name:"Mushroom Cottage",paper:"#fcf8f2", ink:"#3b2b22", fills:["#d7c9a8","#e9e0cc","#e0836f","#b7c2a0","#f2e9da","#c9a98a"]},
+  {id:"beachday",    name:"Beach Day",       paper:"#f8fdff", ink:"#16384a", fills:["#7fd8e8","#ffe9b8","#ffb49a","#bfeef5","#ffd76e","#e8f6d9"]},
+  {id:"autumn",      name:"Autumn Leaves",   paper:"#fdf9f3", ink:"#3a2314", fills:["#e59b5c","#d9b25c","#c26b55","#a8a35c","#f0dcc0","#e8c98a"]},
+  {id:"sakura",      name:"Cherry Blossom",  paper:"#fffafc", ink:"#40293a", fills:["#ffd6e3","#fff0f5","#d7ecd0","#f8e2ef","#ffe8d6","#e8f3e4"]},
+  {id:"highlighter", name:"Highlighter",     paper:"#fffef5", ink:"#171717", fills:["#fff35c","#9dff6e","#6ef0ff","#ff8ae0","#ffae4d","#c08aff"]},
+  {id:"moonlight",   name:"Moonlight",       paper:"#1f1c2e", ink:"#f3efff", dark:true, fills:["#4b4270","#6b5b9a","#3a3458","#7a6a2e","#5a4f82","#2e2a44"]},
+  {id:"galaxy",      name:"Galaxy",          paper:"#12152b", ink:"#e6ebff", dark:true, fills:["#303a6e","#3f2f6b","#1f2750","#4a3a7d","#2a3360","#5b3f74"]},
+  {id:"tokyo",       name:"Tokyo Neon",      paper:"#16121f", ink:"#f6eeff", dark:true, fills:["#8a2d6b","#2d6e8a","#5c2d8a","#1f4a5c","#8a4d2d","#3a2d6e"]},
+];
+
+let PASTELS = THEMES[0].fills.slice();
+let INK = THEMES[0].ink;
+let PAPER = THEMES[0].paper;
+let themeId = THEMES[0].id;
+
+/* blend two hex colours: t=0 gives a, t=1 gives b */
+const hexParts = c => [1,3,5].map(i => parseInt(c.slice(i,i+2),16));
+const mix = (a,b,t) => {
+  const A = hexParts(a), B = hexParts(b);
+  return "#" + A.map((v,i) => Math.round(v + (B[i]-v)*t).toString(16).padStart(2,"0")).join("");
+};
+
+/* A punchier version of a colour for the progress stripes and the cat's cheeks:
+   same hue, more saturation, slightly darker. Mixing toward black would just
+   make the pastels muddy, so we go through HSL instead. */
+function deepen(hex){
+  let [r,g,b] = hexParts(hex).map(v=>v/255);
+  const max = Math.max(r,g,b), min = Math.min(r,g,b), l = (max+min)/2, d = max-min;
+  let h = 0, sat = d === 0 ? 0 : d / (1 - Math.abs(2*l - 1));
+  if(d){
+    h = max === r ? ((g-b)/d + (g<b ? 6 : 0)) : max === g ? (b-r)/d + 2 : (r-g)/d + 4;
+    h /= 6;
+  }
+  const S = Math.min(1, sat*1.25 + .05), L = Math.max(0, Math.min(1, l - .07));
+  const c = (1 - Math.abs(2*L - 1)) * S, x = c * (1 - Math.abs((h*6) % 2 - 1)), m = L - c/2;
+  const seg = Math.floor(h*6) % 6;
+  const rgb = [[c,x,0],[x,c,0],[0,c,x],[0,x,c],[x,0,c],[c,0,x]][seg];
+  return "#" + rgb.map(v => Math.round((v+m)*255).toString(16).padStart(2,"0")).join("");
+}
+
+function applyTheme(id){
+  const t = THEMES.find(x => x.id === id) || THEMES[0];
+  themeId = t.id;
+  INK = t.ink; PAPER = t.paper; PASTELS = t.fills.slice();
+  const r = document.documentElement.style;
+  r.setProperty("--paper", t.paper);
+  r.setProperty("--ink", t.ink);
+  ["--pink","--butter","--mint","--sky","--lilac","--peach"].forEach((v,i)=>r.setProperty(v, t.fills[i]));
+  r.setProperty("--soft-ink", mix(t.ink, t.paper, .40));
+  r.setProperty("--rule",     mix(t.ink, t.paper, .72));
+  r.setProperty("--deep",     deepen(t.fills[0]));
+  r.setProperty("--warn", t.dark ? "#ffa8b4" : "#b23a48");
+  r.setProperty("--ok",   t.dark ? "#8fe0b8" : "#2f7d5b");
+  r.colorScheme = t.dark ? "dark" : "light";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content = t.fills[0];
+  paintBackground();
+}
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,"0");
 const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -250,21 +403,21 @@ const wk = k => parseKey(k).toLocaleDateString(undefined,{weekday:"short"});
 const clamp = k => k < START ? START : (k > END ? END : k);
 
 /* ---------- little doodles ---------- */
-const flower = (x,y,r,fill) => { let p=""; for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${r*.75}" fill="${fill}" stroke="${INK}" stroke-width="2"/>`;} return p+`<circle cx="${x}" cy="${y}" r="${r*.55}" fill="#fff1b8" stroke="${INK}" stroke-width="2"/>`; };
-const sparkle = (x,y,s) => `<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="#fffdfb" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`;
+const flower = (x,y,r,fill) => { let p=""; for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${r*.75}" fill="${fill}" stroke="${INK}" stroke-width="2"/>`;} return p+`<circle cx="${x}" cy="${y}" r="${r*.55}" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`; };
+const sparkle = (x,y,s) => `<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="${PAPER}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`;
 const svgWrap = (w,h,inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" aria-hidden="true">${inner}</svg>`;
 const flowerIcon = fill => svgWrap(40,40, flower(20,20,7,fill));
-const starIcon = () => svgWrap(24,24,`<path d="M12 2l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 16.6 6.1 19.8l1.3-6.5L2.5 8.8 9.1 8z" fill="#fff1b8" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
-const sunIcon = () => svgWrap(26,26,`<circle cx="13" cy="13" r="6" fill="#fff1b8" stroke="${INK}" stroke-width="2"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<path d="M${13+Math.cos(r)*9} ${13+Math.sin(r)*9}L${13+Math.cos(r)*12} ${13+Math.sin(r)*12}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`}).join(""));
-const cameraIcon = () => svgWrap(26,26,`<rect x="3" y="7" width="20" height="14" rx="4" fill="#ffd3dc" stroke="${INK}" stroke-width="2"/><path d="M9 7l2-3h4l2 3" fill="#ffd3dc" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="13" cy="14" r="4" fill="#d4e6ff" stroke="${INK}" stroke-width="2"/>`);
+const starIcon = () => svgWrap(24,24,`<path d="M12 2l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 16.6 6.1 19.8l1.3-6.5L2.5 8.8 9.1 8z" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
+const sunIcon = () => svgWrap(26,26,`<circle cx="13" cy="13" r="6" fill="${PASTELS[1]}" stroke="${INK}" stroke-width="2"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<path d="M${13+Math.cos(r)*9} ${13+Math.sin(r)*9}L${13+Math.cos(r)*12} ${13+Math.sin(r)*12}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`}).join(""));
+const cameraIcon = () => svgWrap(26,26,`<rect x="3" y="7" width="20" height="14" rx="4" fill="${PASTELS[0]}" stroke="${INK}" stroke-width="2"/><path d="M9 7l2-3h4l2 3" fill="${PASTELS[0]}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="13" cy="14" r="4" fill="${PASTELS[3]}" stroke="${INK}" stroke-width="2"/>`);
 
 /* paper background sprinkled with tiny doodles */
-(function(){
+function paintBackground(){
   const bg = svgWrap(220,220,
-    `<g opacity=".55">${flower(30,34,4.5,"#ffd3dc")}${sparkle(150,40,6)}${flower(185,150,4.5,"#cdeedd")}${sparkle(60,170,5)}${flower(110,110,3.5,"#e6dcff")}<circle cx="200" cy="90" r="2.5" fill="${INK}"/><circle cx="20" cy="110" r="2" fill="${INK}"/></g>`);
+    `<g opacity=".55">${flower(30,34,4.5,PASTELS[0])}${sparkle(150,40,6)}${flower(185,150,4.5,PASTELS[2])}${sparkle(60,170,5)}${flower(110,110,3.5,PASTELS[4])}<circle cx="200" cy="90" r="2.5" fill="${INK}"/><circle cx="20" cy="110" r="2" fill="${INK}"/></g>`);
   document.body.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(bg)}")`;
   document.body.style.backgroundSize = "220px 220px";
-})();
+}
 
 /* ---------- storage: small stuff in localStorage ----------
    Everything is prefixed with "rr:" because every project on a
@@ -369,16 +522,25 @@ const normalizeDay = v => ({
 });
 const isFull = d => tasks.length>0 && tasks.every(t=>d.done && d.done[t.id]);
 
-function allKeys(){
+let KEYS = [];
+function rebuildKeys(){
   const out=[]; const d=parseKey(START), e=parseKey(END);
-  while(d<=e){ out.push(keyOf(d)); d.setDate(d.getDate()+1); }
-  return out;
+  while(d<=e && out.length<MAX_DAYS){ out.push(keyOf(d)); d.setDate(d.getDate()+1); }
+  KEYS = out.length ? out : [START];
 }
-const KEYS = allKeys();
+const isDate = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(parseKey(v));
+const daysBetween = (a,b) => Math.round((parseKey(b) - parseKey(a)) / 86400000) + 1;
 
 function loadAll(){
-  const s = lsRead(LS_PREFIX+"settings", null);
-  if(s && Array.isArray(s.tasks) && s.tasks.length) tasks = s.tasks;
+  const s = lsRead(LS_PREFIX+"settings", null) || {};
+  if(Array.isArray(s.tasks) && s.tasks.length) tasks = s.tasks;
+  START = isDate(s.start) ? s.start : DEFAULT_START;
+  END   = isDate(s.end) && s.end >= START ? s.end : DEFAULT_END;
+  if(END < START) END = START;
+  rebuildKeys();
+  END = KEYS[KEYS.length-1];            // honour the MAX_DAYS cap
+  applyTheme(s.theme || THEMES[0].id);
+  viewKey = clamp(viewKey);
   days = {};
   KEYS.forEach(k=>{
     const v = lsRead(lsKeyFor(k), null);
@@ -397,9 +559,9 @@ function saveDay(k){
   const ok = lsWrite(lsKeyFor(k), {done:d.done, photos:d.photos||[]});
   flashSaved(ok ? "saved ♡" : "couldn't save — storage is full");
 }
-function saveSettings(){
-  const ok = lsWrite(LS_PREFIX+"settings", {tasks});
-  flashSaved(ok ? "checklist saved ♡" : "couldn't save checklist");
+function saveSettings(msg){
+  const ok = lsWrite(LS_PREFIX+"settings", {tasks, start:START, end:END, theme:themeId});
+  flashSaved(ok ? (msg || "saved ♡") : "couldn't save that");
 }
 
 /* ---------- rendering ---------- */
@@ -602,7 +764,62 @@ $("newTask").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault
 $("saveTasks").addEventListener("click",()=>{
   const next=editDraft.filter(t=>t.label.trim()).map(t=>({id:t.id,label:t.label.trim()}));
   if(!next.length){ alert("Keep at least one task on the list!"); return; }
-  tasks=next; saveSettings(); render(); $("editDrawer").open=false;
+  tasks=next; saveSettings("checklist saved ♡"); render(); $("editDrawer").open=false;
+});
+
+/* ---------- colours ---------- */
+function renderThemes(){
+  const g = $("themeGrid"); g.textContent = "";
+  THEMES.forEach(t=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "theme";
+    b.style.background = t.paper; b.style.color = t.ink; b.style.borderColor = t.ink;
+    b.setAttribute("aria-pressed", String(t.id === themeId));
+    b.innerHTML = `<span class="nm"></span><span class="dots">${t.fills.map(f=>`<i style="background:${f}"></i>`).join("")}</span>`;
+    b.querySelector(".nm").textContent = t.name;
+    b.addEventListener("click", ()=>{
+      applyTheme(t.id);
+      saveSettings(t.name + " ♡");
+      renderThemes();
+      render();
+    });
+    g.appendChild(b);
+  });
+}
+$("themeDrawer").addEventListener("toggle", e=>{ if(e.target.open) renderThemes(); });
+
+/* ---------- how many days ---------- */
+function showDateCount(){
+  const a = $("startDate").value, b = $("endDate").value;
+  const el = $("dateCount");
+  if(!isDate(a) || !isDate(b) || b < a){ el.textContent = ""; return; }
+  const n = daysBetween(a,b);
+  el.textContent = n > MAX_DAYS
+    ? `${n} days — that's past the ${MAX_DAYS}-day limit, so it'll stop at ${MAX_DAYS}.`
+    : `That's ${n} day${n===1?"":"s"} of room resetting.`;
+}
+$("datesDrawer").addEventListener("toggle", e=>{
+  if(!e.target.open) return;
+  $("startDate").value = START; $("endDate").value = END;
+  $("dateMsg").textContent = ""; showDateCount();
+});
+$("startDate").addEventListener("input", showDateCount);
+$("endDate").addEventListener("input", showDateCount);
+$("saveDates").addEventListener("click", ()=>{
+  const a = $("startDate").value, b = $("endDate").value;
+  const msg = $("dateMsg");
+  if(!isDate(a) || !isDate(b)){ msg.className="msg"; msg.textContent="Pick both a start and an end date."; return; }
+  if(b < a){ msg.className="msg"; msg.textContent="The end date has to come after the start date."; return; }
+  START = a; END = b;
+  rebuildKeys();
+  END = KEYS[KEYS.length-1];            // honour the MAX_DAYS cap
+  saveSettings("dates saved ♡");
+  loadAll();                            // pull in any days that just came into range
+  viewKey = clamp(viewKey);
+  render();
+  msg.className = "msg ok";
+  msg.textContent = `${KEYS.length} days, ${short(START)} to ${short(END)}.`;
+  $("endDate").value = END;
 });
 
 /* ---------- backup & restore ----------
@@ -625,7 +842,8 @@ $("backupBtn").addEventListener("click", async ()=>{
       const blob = await getPhoto(id);
       if(blob) photos[id] = await blobToDataURL(blob);
     }
-    const payload = {app:"room-reset", version:1, exported:new Date().toISOString(), settings:{tasks}, days, photos};
+    const payload = {app:"room-reset", version:2, exported:new Date().toISOString(),
+                     settings:{tasks, start:START, end:END, theme:themeId}, days, photos};
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload)], {type:"application/json"}));
     const a = document.createElement("a");
     a.href = url; a.download = `room-reset-backup-${keyOf(new Date())}.json`;
@@ -651,10 +869,18 @@ $("restoreInput").addEventListener("change", async e=>{
     await clearPhotos();
     for(const [id, dataUrl] of Object.entries(data.photos||{})) await putPhoto(id, await dataURLToBlob(dataUrl));
 
-    KEYS.forEach(k=>localStorage.removeItem(lsKeyFor(k)));
+    // clear every saved day, not just the ones in the current window — the
+    // backup may have been made with a different start/end
+    Object.keys(localStorage).filter(k=>k.startsWith(LS_PREFIX+"day-")).forEach(k=>localStorage.removeItem(k));
     localStorage.removeItem(LS_PREFIX+"settings");
-    if(data.settings && Array.isArray(data.settings.tasks) && data.settings.tasks.length) lsWrite(LS_PREFIX+"settings", {tasks:data.settings.tasks});
-    Object.entries(data.days).forEach(([k,v])=>{ if(KEYS.includes(k)) lsWrite(lsKeyFor(k), normalizeDay(v)); });
+    const st = data.settings || {};
+    lsWrite(LS_PREFIX+"settings", {
+      tasks: Array.isArray(st.tasks) && st.tasks.length ? st.tasks : tasks,
+      start: isDate(st.start) ? st.start : START,
+      end:   isDate(st.end) ? st.end : END,
+      theme: st.theme || themeId,
+    });
+    Object.entries(data.days).forEach(([k,v])=>lsWrite(lsKeyFor(k), normalizeDay(v)));
 
     loadAll(); render();
     backupMsg("Restored! Everything's back ♡", true);
@@ -681,9 +907,34 @@ if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
 
+/* ---------- the opening screen ----------
+   Shows while the app paints behind it, then fades. Tap or press anything to
+   skip it; people who've asked for less motion get a much shorter one. */
+function runSplash(){
+  const el = $("splash");
+  if(!el) return;
+  const dayNum = KEYS.indexOf(today()) + 1;
+  $("splashSub").textContent = dayNum > 0 ? `day ${dayNum} of ${KEYS.length} · let's tidy up ♡` : "let's tidy up ♡";
+
+  const quick = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let closed = false;
+  const close = () => {
+    if(closed) return;
+    closed = true;
+    el.classList.add("gone");
+    setTimeout(()=>{ el.hidden = true; }, 550);
+    removeEventListener("pointerdown", close);
+    removeEventListener("keydown", close);
+  };
+  addEventListener("pointerdown", close);
+  addEventListener("keydown", close);
+  setTimeout(close, quick ? 500 : 1700);
+}
+
 /* ---------- go ---------- */
 loadAll();
 render();
+runSplash();
 setupStorage();
 
 /* roll over to the new day at midnight without a refresh */
