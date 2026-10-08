@@ -1,6 +1,6 @@
 /* Room Reset service worker — just enough to open the app with no internet.
    Bump CACHE when you change the app, or phones will keep serving the old one. */
-const CACHE = "room-reset-v4";
+const CACHE = "room-reset-v5";
 const SHELL = [
   "./",
   "./index.html",

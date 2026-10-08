@@ -37,7 +37,15 @@ Then open <http://localhost:8123>. (Open the file directly and the service worke
 ## Changing it
 
 - **Different dates?** Use the **📅 Change my dates** drawer in the app — pick any start and end you like, up to 400 days. (`DEFAULT_START` / `DEFAULT_END` in the script are only the first-run defaults.) Changing the window never deletes anything; days outside it are just hidden.
-- **Different look?** **🎨 My theme** has 20 of them. A theme isn't just colours — it's an emoji, a handwriting font, the doodles sprinkled over the paper (mushrooms, shells, moons, lightning…), the sticker a perfect day earns, and its own cheer line. Adding a 21st is one entry in the `THEMES` array; the greys, the accent and the error red are all mixed from the six fills, and the font is only downloaded when a theme that uses it is picked.
+- **Different look?** **🎨 My theme** has 20 of them, and a theme changes the whole page, not just its colours:
+  - **palette** — six "crayon" fills plus paper and ink (the greys, the accent and the error red are mixed from those)
+  - **wallpaper** — one of 12 in `BGS`: ruled notebook paper, graph paper, gingham, polka dots, diagonal stripes, waves, confetti, bubbles, scattered doodles, stars, glow
+  - **handwriting and body text** — one of 9 display fonts and 6 body fonts, each with a size multiplier so wide faces don't blow out the layout. A font is only downloaded when a theme using it is picked.
+  - **structure** — a `SHAPES` preset controls outline weight, corner radius, how wonky things sit (`tilt: 0` = dead straight), the shadow treatment (solid sticker / soft blur / none / neon glow) and whether headings go uppercase
+  - **doodles** — 16 motifs in `MOTIFS` (mushrooms, shells, moons, bolts, candy, butterflies…), used on the wallpaper, in empty polaroids and as the sticker a perfect day earns
+  - **words** — its own cheer line and photo prompt
+
+  Adding a 21st theme is one entry in `THEMES`.
 - **Different default tasks?** `DEFAULT_TASKS` near the top of the `<script>`. (Tasks you've already edited in the app win — they're saved in `rr:settings`.)
 - **Changed the app and the phone keeps showing the old one?** Bump `CACHE` in `sw.js` (`room-reset-v1` → `v2`). That's the service worker's way of being told "throw out what you cached."
 
