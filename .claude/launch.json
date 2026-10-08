@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "room-reset",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "cd /Users/oakley/projects/room-reset && exec python3 -m http.server 8123"
+      ],
+      "port": 8123,
+      "autoPort": true
+    }
+  ]
+}

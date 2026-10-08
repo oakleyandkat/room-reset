@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Room Reset</title>
+<meta name="description" content="A daily checklist and photo wall for keeping my room clean.">
+<meta name="theme-color" content="#ffd3dc">
+
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Room Reset">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout: coloring-book page on one phone column — today's sheet on top, then a scrolling polaroid wall Oct 7 → Dec 31.
+   Single light theme on purpose: white paper, black ink, pastel "crayon" fills. */
+:root{
+  color-scheme:light;
+  --paper:#fffdfb; --ink:#1e1b1c; --soft-ink:#6b6466;
+  --pink:#ffd3dc; --butter:#fff1b8; --mint:#cdeedd; --sky:#d4e6ff; --lilac:#e6dcff; --peach:#ffdcc4;
+  --hand:"Gaegu","Comic Sans MS",ui-rounded,cursive;
+  --body:"Nunito",ui-rounded,system-ui,-apple-system,sans-serif;
+  --line:2.5px solid var(--ink);
+}
+*{box-sizing:border-box}
+/* our .viewing/.done-banner rules set display:flex, which would otherwise beat
+   the browser's built-in [hidden] rule and show them anyway. */
+[hidden]{display:none !important}
+html{background:var(--paper)}
+body{background-color:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;font-weight:500;margin:0;-webkit-text-size-adjust:100%}
+.wrap{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:18px 64px;padding-bottom:calc(64px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:22px}
+
+/* header */
+.top{border:var(--line);border-radius:22px;background:var(--paper);padding:16px 16px 14px;position:relative;display:flex;gap:12px;align-items:center}
+.top svg.mascot{width:78px;height:78px;flex:none}
+.top .t{flex:1;min-width:0}
+h1{font-family:var(--hand);font-weight:700;font-size:2.4rem;line-height:.95;margin:0;letter-spacing:.01em}
+.date{font-family:var(--hand);font-size:1.25rem;color:var(--soft-ink);margin-top:4px}
+.badge{border:var(--line);border-radius:16px;background:var(--butter);padding:6px 10px;text-align:center;flex:none;transform:rotate(3deg)}
+.badge b{font-family:var(--hand);font-size:2rem;line-height:1;display:block;font-variant-numeric:tabular-nums}
+.badge span{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.top .cloud{position:absolute;top:-18px;right:70px;width:64px}
+
+.viewing{display:flex;justify-content:space-between;align-items:center;gap:10px;border:var(--line);border-radius:14px;background:var(--sky);padding:8px 12px;font-family:var(--hand);font-size:1.2rem}
+.viewing button{font:800 .85rem var(--body);background:var(--paper);border:var(--line);border-radius:99px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+
+/* progress */
+.prog{display:flex;flex-direction:column;gap:6px}
+.bar{height:20px;border:var(--line);border-radius:99px;background:var(--paper);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--pink) 0 8px,#ffc2cf 8px 16px);border-right:2.5px solid var(--ink);transition:width .35s}
+.bar i.zero{border-right:0}
+.ptext{display:flex;justify-content:space-between;gap:10px;font-family:var(--hand);font-size:1.15rem;font-variant-numeric:tabular-nums}
+.ptext .s{color:var(--soft-ink);text-align:right}
+
+.done-banner{border:var(--line);border-radius:16px;background:var(--mint);padding:10px 14px;font-family:var(--hand);font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.done-banner svg{width:28px;height:28px;flex:none}
+
+/* checklist */
+.sheet{border:var(--line);border-radius:22px;background:var(--paper);padding:6px 8px}
+h2{font-family:var(--hand);font-weight:700;font-size:1.7rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;line-height:1}
+h2 svg{width:26px;height:26px;flex:none}
+ul{list-style:none;margin:0;padding:0}
+li label{display:flex;align-items:center;gap:14px;padding:12px 8px;cursor:pointer;min-height:58px}
+li+li label{border-top:2px dashed #cfc8ca}
+li input{appearance:none;-webkit-appearance:none;width:32px;height:32px;border:var(--line);border-radius:10px;background:var(--paper);flex:none;display:grid;place-items:center;margin:0;cursor:pointer;transition:transform .15s}
+li:nth-child(6n+1) input:checked{background:var(--pink)}
+li:nth-child(6n+2) input:checked{background:var(--butter)}
+li:nth-child(6n+3) input:checked{background:var(--mint)}
+li:nth-child(6n+4) input:checked{background:var(--sky)}
+li:nth-child(6n+5) input:checked{background:var(--lilac)}
+li:nth-child(6n+6) input:checked{background:var(--peach)}
+li input:checked{transform:rotate(-6deg)}
+li input:checked::after{content:"";width:9px;height:16px;border:solid var(--ink);border-width:0 3px 3px 0;transform:translateY(-2px) rotate(45deg)}
+li input:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+li .lbl{font-weight:700;font-size:1.02rem}
+li input:checked + .lbl{text-decoration:line-through;text-decoration-thickness:2px;color:var(--soft-ink)}
+
+/* photo for selected day */
+.photo-box{display:flex;flex-direction:column;gap:12px}
+.big-polaroid{border:var(--line);border-radius:12px;background:var(--paper);padding:10px 10px 4px;transform:rotate(-1.2deg);position:relative;align-self:center;width:min(100%,360px)}
+.big-polaroid .ph{aspect-ratio:1;max-width:100%;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--lilac);display:grid;place-items:center;text-align:center;padding:0}
+.big-polaroid .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.big-polaroid .ph .ph-empty{font-family:var(--hand);font-size:1.3rem;padding:20px}
+.big-polaroid .cap{font-family:var(--hand);font-size:1.4rem;text-align:center;padding:6px 0 2px}
+.tape{position:absolute;top:-12px;left:50%;width:84px;height:24px;transform:translateX(-50%) rotate(-4deg);border:2px solid var(--ink);background:var(--butter);opacity:.95;border-radius:3px}
+.btn{font:800 1.02rem var(--body);border:var(--line);border-radius:16px;padding:13px 16px;cursor:pointer;background:var(--pink);color:var(--ink);width:100%;box-shadow:0 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.alt{background:var(--mint)}
+.btn.small{font-size:.9rem;padding:10px 12px;box-shadow:0 3px 0 var(--ink)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+.btn-row{display:flex;gap:10px}
+.linkish{background:none;border:0;font:800 .9rem var(--body);color:var(--soft-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px;align-self:center}
+.linkish:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+.msg{font-weight:700;color:#b23a48;margin:0;min-height:1em;font-size:.92rem}
+.msg.ok{color:#2f7d5b}
+
+/* photo wall */
+.month{display:flex;flex-direction:column;gap:14px}
+.month-h{font-family:var(--hand);font-weight:700;font-size:1.9rem;display:flex;align-items:center;gap:10px;margin:6px 0 0}
+.month-h svg{width:30px;height:30px;flex:none}
+.month-h .pill{font-family:var(--body);font-size:.75rem;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:2px 9px;background:var(--paper)}
+.wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 12px}
+.pol{border:2px solid var(--ink);border-radius:8px;background:var(--paper);padding:5px 5px 2px;cursor:pointer;font:inherit;color:var(--ink);text-align:center;position:relative;transition:transform .15s}
+.pol:nth-child(3n+1){transform:rotate(-2deg)} .pol:nth-child(3n+2){transform:rotate(1.5deg)} .pol:nth-child(3n){transform:rotate(-.8deg)}
+.pol:hover{transform:rotate(0) scale(1.04)}
+.pol:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+.pol .ph{aspect-ratio:1;max-width:100%;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;display:grid;place-items:center}
+.pol .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.pol .ph svg{width:46%;height:46%}
+.pol .d{font-family:var(--hand);font-size:1.05rem;line-height:1.1;padding-top:4px;font-weight:700;font-variant-numeric:tabular-nums}
+.pol .n{font-size:.68rem;font-weight:800;color:var(--soft-ink);padding-bottom:3px}
+.pol.full .n{color:var(--ink)}
+.pol.today{box-shadow:0 0 0 3px var(--paper),0 0 0 5.5px var(--ink)}
+.pol.sel{background:var(--butter)}
+.pol.future{border-style:dashed;cursor:default;color:var(--soft-ink)}
+.pol.future .ph{border-style:dashed;background:transparent !important}
+.pol.future:hover{transform:none}
+.pol .star{position:absolute;top:-10px;right:-8px;width:24px;height:24px}
+
+/* edit + backup drawers */
+details{border:var(--line);border-radius:18px;background:var(--paper);padding:4px 14px}
+details summary{cursor:pointer;font-family:var(--hand);font-size:1.35rem;font-weight:700;padding:8px 0}
+details summary:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+.edit{display:flex;flex-direction:column;gap:8px;padding-bottom:14px}
+.edit-row{display:flex;gap:8px}
+.edit-row input{flex:1;min-width:0;font:600 1rem var(--body);padding:10px 12px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink)}
+.x{border:2px solid var(--ink);background:var(--pink);color:var(--ink);border-radius:12px;width:46px;font-size:1.2rem;font-weight:800;cursor:pointer;flex:none}
+.note{font-size:.85rem;color:var(--soft-ink);font-weight:600;margin:0}
+.foot{font-family:var(--hand);font-size:1.15rem;text-align:center;color:var(--soft-ink)}
+@media (prefers-reduced-motion:reduce){.bar i,.pol,li input,.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <svg class="cloud" viewBox="0 0 64 30" aria-hidden="true"><path d="M10 26c-6 0-8-8-2-10 0-7 9-9 12-4 3-8 16-8 18 0 6-3 13 1 11 7 6 1 6 7 0 7z" fill="#d4e6ff" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/></svg>
+    <svg class="mascot" viewBox="0 0 80 80" aria-hidden="true">
+      <path d="M17 30 L19 9 L34 21 Z M63 30 L61 9 L46 21 Z" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M21 14 l9 8 M59 14 l-9 8" stroke="#ffd3dc" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="40" cy="44" rx="29" ry="25" fill="#fffdfb" stroke="#1e1b1c" stroke-width="2.5"/>
+      <path d="M40 19c-6 2-10 7-10 7 6 0 12-3 14-6z" fill="#ffdcc4" stroke="#1e1b1c" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="29" cy="43" r="3" fill="#1e1b1c"/><circle cx="51" cy="43" r="3" fill="#1e1b1c"/>
+      <path d="M35 49 q2.5 3 5 0 q2.5 3 5 0" fill="none" stroke="#1e1b1c" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="22" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/><ellipse cx="58" cy="51" rx="4.5" ry="2.8" fill="#ffc2cf"/>
+    </svg>
+    <div class="t">
+      <h1>Room Reset</h1>
+      <div class="date" id="dateLabel"></div>
+    </div>
+    <div class="badge"><b id="streak">0</b><span>streak</span></div>
+  </div>
+
+  <div class="viewing" id="viewing" hidden><span id="viewingText"></span><button id="backToday" type="button">Back to today</button></div>
+
+  <div class="prog">
+    <div class="bar"><i id="bar" class="zero"></i></div>
+    <div class="ptext"><span id="count">0 of 0 done</span><span class="s" id="saveState"></span></div>
+  </div>
+
+  <div class="done-banner" id="doneBanner" hidden><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M15 26C4 18 3 11 6 7c3-3 7-2 9 2 2-4 6-5 9-2 3 4 2 11-9 19z" fill="#ffd3dc" stroke="#1e1b1c" stroke-width="2.5" stroke-linejoin="round"/></svg>All clean today! So proud of you.</div>
+
+  <section class="sheet">
+    <ul id="list"></ul>
+  </section>
+
+  <section class="photo-box">
+    <h2 id="photoTitle"></h2>
+    <div class="big-polaroid">
+      <div class="tape"></div>
+      <div class="ph" id="photoWrap"></div>
+      <div class="cap" id="photoCap"></div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" aria-label="Room photo" hidden>
+    <button class="btn" id="photoBtn" type="button">Take a photo</button>
+    <button class="linkish" id="removePhoto" type="button" hidden>Remove this photo</button>
+    <p class="msg" id="msg"></p>
+  </section>
+
+  <section>
+    <h2 id="wallTitle"></h2>
+    <div id="months" style="display:flex;flex-direction:column;gap:22px"></div>
+  </section>
+
+  <details id="editDrawer">
+    <summary>✎ Change my checklist</summary>
+    <div class="edit">
+      <div id="editList"></div>
+      <div class="edit-row"><input id="newTask" placeholder="Add a task, like 'Water my plant'"><button class="x" id="addTask" type="button" aria-label="Add task">+</button></div>
+      <button class="btn alt" id="saveTasks" type="button">Save checklist</button>
+    </div>
+  </details>
+
+  <details id="backupDrawer">
+    <summary>⬇ Backup &amp; restore</summary>
+    <div class="edit">
+      <p class="note">Everything lives on this phone only. Save a backup file before you switch phones or clear your browser — it has your checklists <em>and</em> your photos in it.</p>
+      <div class="btn-row">
+        <button class="btn small" id="backupBtn" type="button">Save a backup</button>
+        <button class="btn small alt" id="restoreBtn" type="button">Restore a backup</button>
+      </div>
+      <input type="file" id="restoreInput" accept="application/json,.json" aria-label="Backup file" hidden>
+      <p class="msg" id="backupMsg"></p>
+      <p class="note" id="storageNote"></p>
+    </div>
+  </details>
+
+  <div class="foot">every little tidy counts ♡</div>
+</div>
+
+<script>
+"use strict";
+
+const START = "2026-10-07", END = "2026-12-31";
+const DEFAULT_TASKS = [
+  {id:"bed",label:"Make the bed"},
+  {id:"clothes",label:"Clothes in hamper or put away"},
+  {id:"floor",label:"Nothing on the floor"},
+  {id:"desk",label:"Desk and nightstand cleared"},
+  {id:"dishes",label:"Cups and dishes out of the room"},
+  {id:"trash",label:"Trash in the bin"},
+];
+const PASTELS = ["#ffd3dc","#fff1b8","#cdeedd","#d4e6ff","#e6dcff","#ffdcc4"];
+const INK = "#1e1b1c";
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseKey = k => { const [y,m,d]=k.split("-").map(Number); return new Date(y,m-1,d); };
+const nice = k => parseKey(k).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+const short = k => parseKey(k).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+const wk = k => parseKey(k).toLocaleDateString(undefined,{weekday:"short"});
+const clamp = k => k < START ? START : (k > END ? END : k);
+
+/* ---------- little doodles ---------- */
+const flower = (x,y,r,fill) => { let p=""; for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${r*.75}" fill="${fill}" stroke="${INK}" stroke-width="2"/>`;} return p+`<circle cx="${x}" cy="${y}" r="${r*.55}" fill="#fff1b8" stroke="${INK}" stroke-width="2"/>`; };
+const sparkle = (x,y,s) => `<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="#fffdfb" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`;
+const svgWrap = (w,h,inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" aria-hidden="true">${inner}</svg>`;
+const flowerIcon = fill => svgWrap(40,40, flower(20,20,7,fill));
+const starIcon = () => svgWrap(24,24,`<path d="M12 2l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 16.6 6.1 19.8l1.3-6.5L2.5 8.8 9.1 8z" fill="#fff1b8" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`);
+const sunIcon = () => svgWrap(26,26,`<circle cx="13" cy="13" r="6" fill="#fff1b8" stroke="${INK}" stroke-width="2"/>`+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<path d="M${13+Math.cos(r)*9} ${13+Math.sin(r)*9}L${13+Math.cos(r)*12} ${13+Math.sin(r)*12}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`}).join(""));
+const cameraIcon = () => svgWrap(26,26,`<rect x="3" y="7" width="20" height="14" rx="4" fill="#ffd3dc" stroke="${INK}" stroke-width="2"/><path d="M9 7l2-3h4l2 3" fill="#ffd3dc" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><circle cx="13" cy="14" r="4" fill="#d4e6ff" stroke="${INK}" stroke-width="2"/>`);
+
+/* paper background sprinkled with tiny doodles */
+(function(){
+  const bg = svgWrap(220,220,
+    `<g opacity=".55">${flower(30,34,4.5,"#ffd3dc")}${sparkle(150,40,6)}${flower(185,150,4.5,"#cdeedd")}${sparkle(60,170,5)}${flower(110,110,3.5,"#e6dcff")}<circle cx="200" cy="90" r="2.5" fill="${INK}"/><circle cx="20" cy="110" r="2" fill="${INK}"/></g>`);
+  document.body.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(bg)}")`;
+  document.body.style.backgroundSize = "220px 220px";
+})();
+
+/* ---------- storage: small stuff in localStorage ----------
+   Everything is prefixed with "rr:" because every project on a
+   username.github.io site shares one localStorage box. */
+const LS_PREFIX = "rr:";
+const lsKeyFor = k => LS_PREFIX + "day-" + k;
+
+function lsRead(key, fallback){
+  try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+  catch(e){ return fallback; }
+}
+function lsWrite(key, value){
+  try{ localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch(e){ return false; }
+}
+
+/* ---------- storage: photos in IndexedDB ----------
+   localStorage tops out around 5 MB and only holds text, so the shrunk JPEGs
+   go in IndexedDB, which stores real Blobs and has room to grow. */
+const DB_NAME = "room-reset", DB_STORE = "photos";
+let dbPromise = null;
+
+function openDB(){
+  if(dbPromise) return dbPromise;
+  dbPromise = new Promise((resolve,reject)=>{
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => { if(!req.result.objectStoreNames.contains(DB_STORE)) req.result.createObjectStore(DB_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return dbPromise;
+}
+function tx(mode, run){
+  return openDB().then(db => new Promise((resolve,reject)=>{
+    const t = db.transaction(DB_STORE, mode);
+    const out = run(t.objectStore(DB_STORE));
+    t.oncomplete = () => resolve(out && out.result !== undefined ? out.result : undefined);
+    t.onerror = () => reject(t.error);
+    t.onabort = () => reject(t.error);
+  }));
+}
+const putPhoto = (id, blob) => tx("readwrite", s => s.put(blob, id));
+const getPhoto = id => tx("readonly", s => s.get(id));
+const delPhoto = id => tx("readwrite", s => s.delete(id));
+const allPhotoIds = () => tx("readonly", s => s.getAllKeys());
+const clearPhotos = () => tx("readwrite", s => s.clear());
+
+/* Blobs can't go straight into an <img>; URL.createObjectURL hands out a
+   temporary address for one. Keep them in a Map so repainting is free. */
+const urlCache = new Map();
+async function photoURL(id){
+  if(urlCache.has(id)) return urlCache.get(id);
+  const blob = await getPhoto(id);
+  if(!blob) return null;
+  const url = URL.createObjectURL(blob);
+  urlCache.set(id, url);
+  return url;
+}
+function forgetPhotoURL(id){
+  const url = urlCache.get(id);
+  if(url){ URL.revokeObjectURL(url); urlCache.delete(id); }
+}
+
+/* Wall tiles only fetch their photo once they're close to the screen. */
+const lazyObserver = ("IntersectionObserver" in window) ? new IntersectionObserver((entries,obs)=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    obs.unobserve(en.target);
+    fillImage(en.target);
+  });
+},{rootMargin:"300px"}) : null;
+
+async function fillImage(img){
+  const id = img.dataset.photo;
+  if(!id) return;
+  const url = await photoURL(id);
+  if(url && img.dataset.photo === id) img.src = url;
+}
+function lazyImage(id, alt){
+  const img = document.createElement("img");
+  img.alt = alt || "";
+  img.dataset.photo = id;
+  img.loading = "lazy";
+  if(lazyObserver) lazyObserver.observe(img); else fillImage(img);
+  return img;
+}
+
+/* ---------- app state ---------- */
+let tasks = DEFAULT_TASKS.slice();
+let days = {};                                  // "2026-10-09" -> {done:{}, photo:id|null}
+let viewKey = clamp(keyOf(new Date()));
+let editDraft = null;
+
+const today = () => clamp(keyOf(new Date()));
+const dayData = k => days[k] || {done:{},photo:null};
+const isFull = d => tasks.length>0 && tasks.every(t=>d.done && d.done[t.id]);
+
+function allKeys(){
+  const out=[]; const d=parseKey(START), e=parseKey(END);
+  while(d<=e){ out.push(keyOf(d)); d.setDate(d.getDate()+1); }
+  return out;
+}
+const KEYS = allKeys();
+
+function loadAll(){
+  const s = lsRead(LS_PREFIX+"settings", null);
+  if(s && Array.isArray(s.tasks) && s.tasks.length) tasks = s.tasks;
+  days = {};
+  KEYS.forEach(k=>{
+    const v = lsRead(lsKeyFor(k), null);
+    if(v) days[k] = {done: v.done || {}, photo: v.photo || null};
+  });
+}
+
+let saveTimer = null;
+function flashSaved(text){
+  $("saveState").textContent = text;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ $("saveState").textContent=""; }, 1600);
+}
+function saveDay(k){
+  const d = dayData(k);
+  const ok = lsWrite(lsKeyFor(k), {done:d.done, photo:d.photo||null});
+  flashSaved(ok ? "saved ♡" : "couldn't save — storage is full");
+}
+function saveSettings(){
+  const ok = lsWrite(LS_PREFIX+"settings", {tasks});
+  flashSaved(ok ? "checklist saved ♡" : "couldn't save checklist");
+}
+
+/* ---------- rendering ---------- */
+/* The numbers, the banner and the wall — everything that changes when a box is
+   ticked. Kept separate from render() so ticking a box doesn't tear down and
+   rebuild the checkboxes underneath your finger (that would drop keyboard focus). */
+function updateStatus(){
+  const d = dayData(viewKey);
+  const n = tasks.filter(t=>d.done[t.id]).length;
+  const bar=$("bar"); bar.style.width = tasks.length ? (n/tasks.length*100)+"%" : "0"; bar.classList.toggle("zero", n===0);
+  $("count").textContent = `${n} of ${tasks.length} done`;
+  $("doneBanner").hidden = !isFull(d);
+  renderWall(); renderStreak();
+}
+
+function render(){
+  const d = dayData(viewKey), isToday = viewKey===today();
+  $("dateLabel").textContent = nice(viewKey);
+  $("viewing").hidden = isToday;
+  $("viewingText").textContent = "Looking back at " + short(viewKey);
+
+  const ul=$("list"); ul.textContent="";
+  tasks.forEach(t=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<label><input type="checkbox"><span class="lbl"></span></label>`;
+    li.querySelector(".lbl").textContent=t.label;
+    const cb=li.querySelector("input"); cb.checked=!!d.done[t.id];
+    cb.addEventListener("change",()=>toggle(t.id,cb.checked));
+    ul.appendChild(li);
+  });
+
+  $("photoTitle").innerHTML = cameraIcon() + `<span></span>`;
+  $("photoTitle").querySelector("span").textContent = isToday ? "Today's photo" : "Photo for " + short(viewKey);
+  const pw=$("photoWrap"); pw.textContent="";
+  if(d.photo){
+    const img = lazyImage(d.photo, "Room photo for " + short(viewKey));
+    img.loading = "eager";
+    fillImage(img);
+    pw.appendChild(img);
+  } else {
+    pw.innerHTML = `<div class="ph-empty">${flowerIcon("#ffd3dc").replace("<svg",'<svg style="width:54px;height:54px;display:block;margin:0 auto 6px"')}Snap your clean room!</div>`;
+  }
+  $("photoCap").textContent = `${wk(viewKey)} · ${short(viewKey)}`;
+  $("photoBtn").textContent = d.photo ? "Retake photo" : "Take a photo";
+  $("removePhoto").hidden = !d.photo;
+
+  updateStatus();
+}
+
+function renderWall(){
+  const t = today();
+  const dayNum = KEYS.indexOf(t)+1;
+  $("wallTitle").innerHTML = sunIcon() + `<span></span>`;
+  $("wallTitle").querySelector("span").textContent = dayNum>0 ? `My photo wall · day ${dayNum} of ${KEYS.length}` : "My photo wall";
+  const box=$("months"); box.textContent="";
+  const groups={};
+  KEYS.forEach(k=>{ const m=k.slice(0,7); (groups[m]=groups[m]||[]).push(k); });
+  Object.keys(groups).forEach((m,mi)=>{
+    const keys=groups[m];
+    const done=keys.filter(k=>isFull(dayData(k))).length;
+    const sec=document.createElement("div"); sec.className="month";
+    sec.innerHTML=`<div class="month-h">${svgWrap(30,30,flower(15,15,5.5,PASTELS[mi*2%6]))}<span></span><span class="pill"></span></div><div class="wall"></div>`;
+    sec.querySelector(".month-h span").textContent = parseKey(keys[0]).toLocaleDateString(undefined,{month:"long"});
+    sec.querySelector(".pill").textContent = `${done} clean`;
+    const grid=sec.querySelector(".wall");
+    keys.forEach((k,i)=>{
+      const d=dayData(k), future = k>t, n=tasks.filter(x=>d.done&&d.done[x.id]).length;
+      const b=document.createElement("button"); b.type="button";
+      b.className="pol"+(future?" future":"")+(k===t?" today":"")+(k===viewKey&&k!==t?" sel":"")+(isFull(d)?" full":"");
+      if(future) b.disabled=true;
+      const color=PASTELS[(i+mi)%6];
+      b.innerHTML=`<div class="ph" style="background:${color}">${d.photo?"":flowerIcon("#fffdfb")}</div><div class="d"></div><div class="n"></div>${isFull(d)?'<span class="star">'+starIcon()+'</span>':''}`;
+      if(d.photo) b.querySelector(".ph").appendChild(lazyImage(d.photo,""));
+      b.querySelector(".d").textContent = short(k);
+      b.querySelector(".n").textContent = future ? wk(k) : (k===t && !n ? "today" : `${n}/${tasks.length}`);
+      b.setAttribute("aria-label", `${nice(k)}${future?" (coming up)":`, ${n} of ${tasks.length} done`}`);
+      if(!future) b.addEventListener("click",()=>{ viewKey=k; render(); window.scrollTo({top:0,behavior:"smooth"}); });
+      grid.appendChild(b);
+    });
+    box.appendChild(sec);
+  });
+}
+
+function renderStreak(){
+  let s=0; const d=parseKey(today());
+  if(!isFull(dayData(keyOf(d)))) d.setDate(d.getDate()-1);   // today isn't done *yet* — that's fine
+  while(isFull(dayData(keyOf(d)))){ s++; d.setDate(d.getDate()-1); }
+  $("streak").textContent=s;
+}
+
+function toggle(id,val){
+  const d={...dayData(viewKey)}; d.done={...d.done,[id]:val};
+  days[viewKey]=d; updateStatus(); saveDay(viewKey);
+}
+
+/* ---------- photos ---------- */
+async function shrink(file){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
+    const max=1400, sc=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement("canvas"); c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.82));
+    return blob || file;
+  }catch(e){ return file; } finally{ URL.revokeObjectURL(url); }
+}
+
+$("photoBtn").addEventListener("click",()=>$("photoInput").click());
+$("photoInput").addEventListener("change",async e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  const k=viewKey; $("msg").className="msg"; $("msg").textContent="";
+  $("photoBtn").disabled=true; $("photoBtn").textContent="Saving…";
+  try{
+    const blob=await shrink(f);
+    const id=`${k}-${Date.now().toString(36)}`;
+    await putPhoto(id, blob);
+    const old=dayData(k).photo;
+    days[k]={...dayData(k), photo:id};
+    saveDay(k);
+    if(old){ forgetPhotoURL(old); delPhoto(old).catch(()=>{}); }
+  }catch(err){
+    $("msg").textContent = (err && err.name==="QuotaExceededError")
+      ? "No room left for photos. Save a backup, then remove a few old ones."
+      : "Couldn't save that photo. Try taking it again.";
+  }finally{ $("photoBtn").disabled=false; render(); }
+});
+$("removePhoto").addEventListener("click",async()=>{
+  const k=viewKey, id=dayData(k).photo;
+  if(!id || !confirm("Remove the photo for "+short(k)+"?")) return;
+  days[k]={...dayData(k), photo:null};
+  saveDay(k); forgetPhotoURL(id);
+  try{ await delPhoto(id); }catch(e){}
+  render();
+});
+$("backToday").addEventListener("click",()=>{viewKey=today();render();});
+
+/* ---------- editing the checklist ---------- */
+function renderEdit(){
+  const el=$("editList"); el.textContent="";
+  editDraft.forEach((t,i)=>{
+    const r=document.createElement("div"); r.className="edit-row"; r.style.marginBottom="8px";
+    r.innerHTML=`<input><button class="x" type="button" aria-label="Remove">×</button>`;
+    const inp=r.querySelector("input"); inp.value=t.label;
+    inp.setAttribute("aria-label","Task name");
+    inp.addEventListener("input",()=>{editDraft[i].label=inp.value;});
+    r.querySelector("button").addEventListener("click",()=>{editDraft.splice(i,1);renderEdit();});
+    el.appendChild(r);
+  });
+}
+$("editDrawer").addEventListener("toggle",e=>{ if(e.target.open){ editDraft=tasks.map(t=>({...t})); renderEdit(); }});
+$("addTask").addEventListener("click",()=>{
+  const v=$("newTask").value.trim(); if(!v) return;
+  editDraft.push({id:"t"+Date.now().toString(36),label:v}); $("newTask").value=""; renderEdit();
+});
+$("newTask").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("addTask").click();}});
+$("saveTasks").addEventListener("click",()=>{
+  const next=editDraft.filter(t=>t.label.trim()).map(t=>({id:t.id,label:t.label.trim()}));
+  if(!next.length){ alert("Keep at least one task on the list!"); return; }
+  tasks=next; saveSettings(); render(); $("editDrawer").open=false;
+});
+
+/* ---------- backup & restore ----------
+   One .json file with the checklists and the photos (as data: URLs) inside. */
+const blobToDataURL = blob => new Promise((res,rej)=>{
+  const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>rej(r.error); r.readAsDataURL(blob);
+});
+const dataURLToBlob = async url => (await fetch(url)).blob();
+
+function backupMsg(text, ok){
+  const el=$("backupMsg"); el.textContent=text; el.className = "msg" + (ok ? " ok" : "");
+}
+
+$("backupBtn").addEventListener("click", async ()=>{
+  const btn=$("backupBtn"); btn.disabled=true; backupMsg("Packing it up…", true);
+  try{
+    const photos={};
+    const ids = await allPhotoIds();
+    for(const id of ids){
+      const blob = await getPhoto(id);
+      if(blob) photos[id] = await blobToDataURL(blob);
+    }
+    const payload = {app:"room-reset", version:1, exported:new Date().toISOString(), settings:{tasks}, days, photos};
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload)], {type:"application/json"}));
+    const a = document.createElement("a");
+    a.href = url; a.download = `room-reset-backup-${keyOf(new Date())}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 10000);
+    backupMsg(`Saved ${Object.keys(photos).length} photo${Object.keys(photos).length===1?"":"s"} and ${Object.keys(days).length} day${Object.keys(days).length===1?"":"s"}. Keep that file somewhere safe!`, true);
+  }catch(e){
+    backupMsg("Couldn't build the backup file. Try again?", false);
+  }finally{ btn.disabled=false; }
+});
+
+$("restoreBtn").addEventListener("click",()=>$("restoreInput").click());
+$("restoreInput").addEventListener("change", async e=>{
+  const file=e.target.files[0]; e.target.value=""; if(!file) return;
+  try{
+    const data = JSON.parse(await file.text());
+    if(data.app !== "room-reset" || !data.days) throw new Error("not a Room Reset backup");
+    const nDays=Object.keys(data.days).length, nPhotos=Object.keys(data.photos||{}).length;
+    if(!confirm(`Restore ${nDays} days and ${nPhotos} photos?\n\nThis replaces what's on this phone right now.`)) return;
+    backupMsg("Restoring…", true);
+
+    urlCache.forEach(url=>URL.revokeObjectURL(url)); urlCache.clear();
+    await clearPhotos();
+    for(const [id, dataUrl] of Object.entries(data.photos||{})) await putPhoto(id, await dataURLToBlob(dataUrl));
+
+    KEYS.forEach(k=>localStorage.removeItem(lsKeyFor(k)));
+    localStorage.removeItem(LS_PREFIX+"settings");
+    if(data.settings && Array.isArray(data.settings.tasks) && data.settings.tasks.length) lsWrite(LS_PREFIX+"settings", {tasks:data.settings.tasks});
+    Object.entries(data.days).forEach(([k,v])=>{ if(KEYS.includes(k)) lsWrite(lsKeyFor(k), {done:v.done||{}, photo:v.photo||null}); });
+
+    loadAll(); render();
+    backupMsg("Restored! Everything's back ♡", true);
+  }catch(err){
+    backupMsg("That file didn't look like a Room Reset backup.", false);
+  }
+});
+
+/* ---------- storage permission + service worker ---------- */
+async function setupStorage(){
+  const note=$("storageNote");
+  try{
+    if(!navigator.storage || !navigator.storage.persist) return;
+    let persisted = await navigator.storage.persisted();
+    if(!persisted) persisted = await navigator.storage.persist();
+    if(navigator.storage.estimate){
+      const {usage=0} = await navigator.storage.estimate();
+      note.textContent = `Using about ${(usage/1048576).toFixed(1)} MB${persisted ? " · this browser promised to keep your photos" : ""}.`;
+    }
+  }catch(e){ /* nothing to say */ }
+}
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+
+/* ---------- go ---------- */
+loadAll();
+render();
+setupStorage();
+
+/* roll over to the new day at midnight without a refresh */
+let lastDay = today();
+setInterval(()=>{
+  const t = today();
+  if(t !== lastDay){ if(viewKey === lastDay) viewKey = t; lastDay = t; render(); }
+}, 30000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && today()!==lastDay){ viewKey = lastDay = today(); render(); } });
+</script>
+</body>
+</html>
